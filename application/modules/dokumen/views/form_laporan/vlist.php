@@ -28,16 +28,16 @@
           </div>
 
           <div class="form-group">
-				    <label for="tanggal" class="col-sm-3 control-label">Tanggal</label>
+				    <label for="tanggal" class="col-sm-3 control-label">Bulan</label>
 				    <div class="col-sm-6">
-				      <input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Tanggal Kegiatan" value="<?php echo date('Y-m-d');?>">                    
+				      <input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Tanggal Kegiatan" value="<?php echo date('Y-m');?>">                    
               <?php echo form_error('tanggal'); ?>
             </div>
 				  </div>
           <div class="form-group">
 				    <label for="url_fungsi" class="col-sm-3 control-label">Jenis Dokumen</label>
 				    <div class="col-sm-6">
-				       <?php echo form_dropdown('jenis_dokumen', array('pdf'=>'PDF', 'doc'=>'Word'), $this->input->post('jenis_dokumen'), 'class="select-all"');?>
+				       <?php echo form_dropdown('jenis_dokumen', array('pdf'=>'PDF'), 'pdf', 'class="select-all"');?>
               <?php echo form_error('url_fungsi'); ?>
             </div>
 				  </div>
@@ -63,6 +63,6 @@
 <script type="text/javascript"src="<?php echo base_url(); ?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
  $('.datepicker').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm"
     });
 </script>

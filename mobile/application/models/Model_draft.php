@@ -50,7 +50,7 @@ class Model_draft extends CI_Model
 						   a.penerima,a.id_status, a.id_opd, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
 						   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.create_date, b.nm_status');
         $this->db->from('data_agenda a');
-        $this->db->join('master_status b',      'b.id_status 	= a.status_verifikasi');
+        $this->db->join('master_status b',      'b.id_status 	= a.id_status');
        // $this->db->where('a.status_verifikasi', 'SM');
         $this->db->where('a.token', $token);
 
@@ -221,11 +221,9 @@ class Model_draft extends CI_Model
 	public function getDataPenerima($jenis_agenda)
 	{
 		$this->db->select('token, fullname, id_opd, nm_opd');
-		$this->db->from('xi_sa_users');
-		if ($jenis_agenda=='P') {
-			$this->db->where('account_type', 3);
-		}		 
+		$this->db->from('xi_sa_users');				 
 		$this->db->where('id_users !=', 1);
+		$this->db->where('id_users >', 90);
 
 		$data=$this->db->get();
 		return $data->result_array();
@@ -396,6 +394,8 @@ class Model_draft extends CI_Model
 		$this->form_validation->set_rules('jam_selesai', 	'Jam Selesai',  'required');
 		$this->form_validation->set_rules('kegiatan',       'Kegiatan',      'required|trim');
 		$this->form_validation->set_rules('lokasi_kegiatan','Lokasi Kegiatan',      'required|trim');
+		//$this->form_validation->set_rules('penyelenggara',  'Penyelenggara Kegiatan',      'required|trim');
+		//$this->form_validation->set_rules('cp',  		    'Contact Person',      'required|trim');
 		$this->form_validation->set_rules('create_by',       'Create By',      'required|trim');
 		
 		validation_message_setting();
@@ -407,6 +407,9 @@ class Model_draft extends CI_Model
 
 	public function insertDataDraft()
 	{
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+
 		$create_by    = escape($this->input->post('create_by', TRUE));
 		$create_date  = gmdate('Y-m-d H:i:s', time()+60*60*7);
 		$create_ip    = $this->input->ip_address();
@@ -418,20 +421,8 @@ class Model_draft extends CI_Model
 		$id_status="SM";
 
 		$base64 = $this->input->post('dokumen', TRUE);
-
-        if ($base64 !='') {
-        	$gambar = $filename;
-
-	        $tanggalgambar  = gmdate('d-m-Y_H-i-s', time()+60*60*7);
-			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.date('Y').'/'.date('m').'/';	
-			$imageData = base64_decode($base64);
-	        $filename = "agendagub_".$tanggalgambar.'.pdf';
-	        $ads = file_put_contents($upload_path.'/'.$filename, $imageData);
-	        
-        }
-        else{
-        	$gambar='';
-        }        	
+       	$tahun = date('Y');
+        $bulan = date('m');
 
        		$data = array(
 					'token'			  => $token,
@@ -444,8 +435,10 @@ class Model_draft extends CI_Model
 					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
 					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
 					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
+					//'penyelenggara' => escape($this->input->post('penyelenggara', TRUE)),
+					//'cp' => escape($this->input->post('cp', TRUE)),
 					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),				
-					'dokumen'		  => $gambar,	
+					'dokumen'		  => '',	
 					'status_verifikasi'=> escape('CC'),				
 					'status_disposisi'=> escape($status_disposisi),				
 					'id_status'		  => escape($id_status),				
@@ -457,43 +450,36 @@ class Model_draft extends CI_Model
 					'mod_ip'		  => ''
 
 					);
-					$this->db->insert('data_agenda', $data);
+					$this->db->insert('data_agenda', $data);	
 
-					/*$penerima = escape($this->input->post('penerima', TRUE));
-					$id_user  = $this->mmas->getUsersProfileByUsername($this->input->post('create_by', TRUE))['token'];
-					
-					$nm_pengirim = $this->mmas->getUserFullnameByUsername($create_by);
-					$token_disposisi='';
-					$tipe_notifikasi='SM';
-					$pesan_notifikasi='Ada draft baru';
+		
 
-					$itemsNotifikasi=array('token_agenda'	=>$token,
-										   'token_disposisi'=>$token_disposisi,
-										   'id_pengirim'=>$id_user,
-										   'nm_pengirim'=>$nm_pengirim,
-										   'id_penerima'=>$penerima,
-										   'tipe_notifikasi'=>$tipe_notifikasi,
-										   'pesan_notifikasi'=>$pesan_notifikasi
-										   );
-					$regId = $this->mmas->getDeviceIdAllUsers($penerima);
-					
-					$this->mmas->insertNotification($token, $token_disposisi, $id_user, $penerima, $tipe_notifikasi, $pesan_notifikasi);
-					
-					
-					$items = array('data' => array('title'   => $nm_pengirim,
-												   'message' => $pesan_notifikasi,
-									  		   	   'tipe_notifikasi' => $tipe_notifikasi
-												   ));
+	 	if ($base64 !='' || $base64 !=NULL  ) 
+	 	{
+	 		$this->uploadBase64($token, $base64, $tahun, $bulan);
+	 	}	
 
-					$kirim_notifikasi = $this->mmas->sendNotification($regId, $items);
-					if ($kirim_notifikasi==false) {
-						$errNotifikasi='Notifikasi Gagal Terkirim';
-					}
-					else{
-						$errNotifikasi='Notifikasi Terkirim';
-					}*/
+		return array('message'=>'SUCCESS', 'token'=>$token);//'nama_agenda'=>$nama_agenda, 'notifikasi'=>$errNotifikasi);	
+	}
 
-		return array('message'=>'SUCCESS' );//'nama_agenda'=>$nama_agenda, 'notifikasi'=>$errNotifikasi);	
+	public function uploadBase64($token, $base64, $tahun, $bulan)
+	{
+		 if ($base64 !='' || !empty($base64) || $base64!==NULL) 
+         {
+        	
+        	$tanggalgambar  = gmdate('d-m-Y_H-i-s', time()+60*60*7);
+			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.$tahun.'/'.$bulan.'/';	
+			$imageData = base64_decode($base64);
+	        $filename = "agendagub_".$tanggalgambar.'.pdf';
+	        
+	        $ads = file_put_contents($upload_path.'/'.$filename, $imageData);	 
+
+	        $data = array(					
+				'dokumen'	=> escape($filename)
+			);
+			$this->db->where('token', $token);
+			$this->db->update('data_agenda', $data);
+         }
 	}
 
 	public function getListPenerimaAgenda()

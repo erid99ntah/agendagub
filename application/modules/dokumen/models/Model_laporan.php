@@ -16,7 +16,7 @@ class Model_laporan extends CI_Model
 
 	public function validasiDataValue()
 	{
-		$this->form_validation->set_rules('tanggal', 	    'Tanggal',      'required|valid_date');
+		$this->form_validation->set_rules('tanggal', 	    'Tanggal',      'required');
 		validation_message_setting();
 		if ($this->form_validation->run() == FALSE)
 			return false;
@@ -42,7 +42,7 @@ class Model_laporan extends CI_Model
 	
 	public function cekAgenda($tanggal, $jenis_agenda, $penerima)
 	{
-		$this->db->where('tanggal', $tanggal);
+		//$this->db->where('tanggal', $tanggal);
 		$this->db->where('jenis_agenda', $jenis_agenda);		
 		$this->db->where('penerima', $penerima);		
 		$this->db->where('id_status', 'SH');
@@ -52,15 +52,18 @@ class Model_laporan extends CI_Model
 
 	
 	public function getDataAgenda($tanggal, $jenis_agenda, $penerima)
-	{
+	{	
+		$stats= array('SH', 'SW');
+
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
-			a.penerima, a.dokumen, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan,
+			a.penerima, a.dokumen, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan, a.penyelenggara, a.cp,
 			a.keterangan, a.create_date,a.id_status, b.nm_status');
 		$this->db->from('data_agenda a');
 		$this->db->join('master_status b',  'b.id_status = a.id_status', 'INNER');
-		$this->db->where('tanggal', escape($tanggal));
-		$this->db->where('jenis_agenda', escape($jenis_agenda));
-		$this->db->where('penerima', escape($penerima));		
+		$this->db->where('a.tanggal', escape($tanggal));
+		$this->db->where('a.jenis_agenda', escape($jenis_agenda));
+		$this->db->where('a.penerima', escape($penerima));		
+		$this->db->where_in('a.id_status', $stats);	
 		$query = $this->db->get();
 		return $query->result_array();
 	}

@@ -403,7 +403,7 @@ $config['rest_key_name'] = 'xxx-agenda-key';
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_logging'] = true;
+$config['rest_enable_logging'] = false;
 
 /*
 |--------------------------------------------------------------------------

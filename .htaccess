@@ -33,8 +33,8 @@ deny from all
 # max_execution_time = batas waktu yang diberikan untuk menjalankan script php (dalam detik)
 # max_input_time =  batas waktu yang diberikan untuk inputkan data server (dalam detik)
 <IfModule mod_php5.c>
-  php_value upload_max_filesize 1M
-  php_value max_execution_time 300
-  php_value max_input_time 300
+  php_value upload_max_filesize 100M
+  php_value max_execution_time 600
+  php_value max_input_time 600
 </IfModule>
 

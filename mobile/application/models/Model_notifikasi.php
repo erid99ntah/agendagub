@@ -155,6 +155,41 @@ class Model_notifikasi extends CI_Model
 
         return $data->row_array();
 	}
+
+	/*$penerima = escape($this->input->post('penerima', TRUE));
+					$id_user  = $this->mmas->getUsersProfileByUsername($this->input->post('create_by', TRUE))['token'];
+					
+					$nm_pengirim = $this->mmas->getUserFullnameByUsername($create_by);
+					$token_disposisi='';
+					$tipe_notifikasi='SM';
+					$pesan_notifikasi='Ada draft baru';
+
+					$itemsNotifikasi=array('token_agenda'	=>$token,
+										   'token_disposisi'=>$token_disposisi,
+										   'id_pengirim'=>$id_user,
+										   'nm_pengirim'=>$nm_pengirim,
+										   'id_penerima'=>$penerima,
+										   'tipe_notifikasi'=>$tipe_notifikasi,
+										   'pesan_notifikasi'=>$pesan_notifikasi
+										   );
+					$regId = $this->mmas->getDeviceIdAllUsers($penerima);
+					
+					$this->mmas->insertNotification($token, $token_disposisi, $id_user, $penerima, $tipe_notifikasi, $pesan_notifikasi);
+					
+					
+					$items = array('data' => array('title'   => $nm_pengirim,
+												   'message' => $pesan_notifikasi,
+									  		   	   'tipe_notifikasi' => $tipe_notifikasi
+												   ));
+
+					$kirim_notifikasi = $this->mmas->sendNotification($regId, $items);
+					if ($kirim_notifikasi==false) {
+						$errNotifikasi='Notifikasi Gagal Terkirim';
+					}
+					else{
+						$errNotifikasi='Notifikasi Terkirim';
+					}*/
+
 }
 
 // This is the end of notifikasi model

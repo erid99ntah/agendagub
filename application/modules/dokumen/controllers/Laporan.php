@@ -71,7 +71,7 @@ class Laporan extends SLP_Controller {
 		//set template
 		$template = 'repository/template/agenda_report.docx';
 		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($template);
-		$templateProcessor->setValue('title', 'Daftar Agenda '.$nama.' Tanggal : '.tgl_indo($tanggal).' ');
+		$templateProcessor->setValue('title', 'Daftar Agenda');
 		$no = 1;
 		$templateProcessor->cloneRow('no', (count($dataAgenda) > 0) ? count($dataAgenda) : 1);
 		if(count($dataAgenda) > 0) {
@@ -111,11 +111,12 @@ class Laporan extends SLP_Controller {
 
 	public function export_to_pdf($tanggal, $jenis_agenda, $penerima)
 	{
-		//get data
+		$tahun = substr($tanggal,0,4);
+        $bulan = substr($tanggal,5,2); 
+        $nama = $this->mlap->getNamaUserByToken($penerima);
 
-		$dataAgenda = $this->mlap->getDataAgenda($tanggal, $jenis_agenda, $penerima);
-		$nama = $this->mlap->getNamaUserByToken($penerima);
-		$title = 'Daftar Agenda '.$nama.' Tanggal : '.tgl_indo($tanggal).' ';
+		$title = 'Daftar Agenda '.$nama.' '.bulan($bulan).' '.$tahun.' ';
+
 		//set pdf
 		$pdf = new pdf();
 		//set document information
@@ -149,42 +150,57 @@ class Laporan extends SLP_Controller {
 		$pdf->SetFont('times', '', 11);
 		$pdf->writeHTMLCell(0, 0, 10, '', '<p style="text-indent: 0.3in;text-align: center;">'.$title.'</p>', 0, 0, 0, true, 'L', true);
 		$pdf->ln(12);
+				
 		$html = '<table width="100%" border="1" cellspacing="0" cellpadding="3">
 							<tr>
 								<td style="width:5%;" align="center"><b>No.</b></td>
-								<td style="width:20%;" align="center"><b>NAMA AGENDA</b></td>
+								<td style="width:10%;" align="center"><b>NAMA AGENDA</b></td>
 								<td style="width:10%;" align="center"><b>JAM MULAI</b></td>
 								<td style="width:10%;" align="center"><b>JAM SELESAI</b></td>
-								<td style="width:20%;" align="center"><b>KEGIATAN</b></td>
-								<td style="width:15%;" align="center"><b>LOKASI KEGIATAN</b></td>
-								<td style="width:15%;" align="center"><b>KETERANGAN</b></td>
+								<td style="width:10%;" align="center"><b>KEGIATAN</b></td>
+								<td style="width:10%;" align="center"><b>LOKASI KEGIATAN</b></td>
+								<td style="width:10%;" align="center"><b>PENYELENGGARA</b></td>
+								<td style="width:10%;" align="center"><b>CP</b></td>
+								<td style="width:10%;" align="center"><b>DIHADIRI</b></td>
+								<td style="width:10%;" align="center"><b>KETERANGAN</b></td>
 							</tr>';
-		$no_urut = 1;
-		if(count($dataAgenda) > 0) {
-			foreach ($dataAgenda as $key => $dh) {
-				$html .= '<tr>';
-					$html .= '<td style="width:5%;text-align:center;">'.$no_urut.'.</td>';
-					$html .= '<td style="width:20%;text-align:center;">'.$dh['nama_agenda'].'</td>';
-					$html .= '<td style="width:10%;">'.$dh['jam_mulai'].'</td>';
-					$html .= '<td style="width:10%;">'.$dh['jam_selesai'].'</td>';
-					$html .= '<td style="width:20%;">'.$dh['kegiatan'].'</td>';
-					$html .= '<td style="width:15%;">'.$dh['lokasi_kegiatan'].'</td>';
-					$html .= '<td style="width:15%;">'.$dh['keterangan'].'</td>';
-					
-				$html .= '</tr>';
-				$no_urut++;
+		$n = 1;
+		
+			$total = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+
+			for ($i=1; $i <= $total; $i++) 
+			{ 	
+				   $tglAgenda = $tanggal.'-'.$i;
+				   $dataAgenda = $this->mlap->getDataAgenda($tglAgenda, $jenis_agenda, $penerima);
+				   
+				   $html .= '<tr><td colspan="10" style="background:#ccc;"> <strong> Tanggal : '.$tglAgenda.'</strong> </td></tr>';
+
+				   if(count($dataAgenda) > 0) 
+				   {	
+				   		foreach ($dataAgenda as $key => $dh) {
+							$html .= '<tr>';
+								$html .= '<td style="width:5%;text-align:center;">'.$n.'.</td>';
+								$html .= '<td style="width:10%;text-align:center;">'.$dh['nama_agenda'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['jam_mulai'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['jam_selesai'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['kegiatan'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['lokasi_kegiatan'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['penyelenggara'].'</td>';
+								$html .= '<td style="width:10%;">'.$dh['cp'].'</td>';
+								$html .= '<td style="width:10%;">'.$this->mlap->getStatusAgenda($dh['id_status']).'</td>';
+								$html .= '<td style="width:10%;">'.$dh['keterangan'].'</td>';
+								
+							$html .= '</tr>';
+							$n++;
+						}
+				   }
+				   else
+				   {
+				   		$html .= '<tr><td colspan="10">Data Belum Ada </td></tr>';
+				   }					
 			}
-		} else {
-			$html .= '<tr>';
-				$html .= '<td style="width:5%;">1.</td>';
-				$html .= '<td style="width:20%;">&nbsp;</td>';
-				$html .= '<td style="width:10%;">&nbsp;</td>';
-				$html .= '<td style="width:10%;">&nbsp;</td>';
-				$html .= '<td style="width:20%;">&nbsp;</td>';
-				$html .= '<td style="width:15%;">&nbsp;</td>';
-				$html .= '<td style="width:15%;">&nbsp;</td>';
-			$html .= '</tr>';
-		}
+			
+		
 		$html .= '</table>';
 		$pdf->writeHTMLCell(0, 0, 10, '', $html, 0, 0, 0, true, 'L', true);
 		$pdf->lastPage();

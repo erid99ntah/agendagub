@@ -245,14 +245,7 @@ class Draft extends RestController {
 
                      foreach ($data as $key => $dp) {
                         $i=array('token'=>$dp['token'],
-                                 'fullname'      =>$dp['fullname'],
-                                 'jabatan_id'   => $dp['jabatan_id'],
-                                 'jabatan_nm'   => $dp['jabatan_nm'],
-                                 'nm_jab_dprd'   => $dp['nm_jab_dprd'],
-                                 'nm_fraksi'     => $dp['nm_fraksi'],
-                                 'nm_jab_fraksi' => $dp['nm_jab_fraksi'],
-                                 'nm_komisi'     => $dp['nm_komisi'],
-                                 'nm_jab_komisi' => $dp['nm_jab_komisi']
+                                 'fullname'      =>$dp['fullname']
                                  ); 
                         array_push($list, $i);
                      }
@@ -314,7 +307,8 @@ class Draft extends RestController {
              $this->response( [
                     'status'  =>true,
                     'info'    =>true,
-                    'message' => 'Draft berhasil disimpan'
+                    'message' => 'Draft berhasil disimpan',
+                    'token' => $data['token']
                 ], 200 );
         }
         /*$path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../';
