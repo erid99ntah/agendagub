@@ -43,6 +43,17 @@
                   <td>Lokasi Kegiatan</td>
                   <td><?php echo $detail['lokasi_kegiatan'];?></td>
                 </tr>
+
+                 <tr>
+                    <td>Penyelenggara Kegiatan</td>
+                    <td><?php echo $detail['penyelenggara'];?></td>
+                  </tr>
+
+                   <tr>
+                    <td> Contact Person</td>
+                    <td><?php echo $detail['cp'];?></td>
+                  </tr>
+
                 <tr>
                   <td>Dokumen</td>
                   <td><?php
@@ -55,11 +66,13 @@
                       
                      echo '<a href="'.site_url('dokumen/draft/download_file/'.$detail['token']).'">
                             '.$detail['dokumen'].'
-                            </a>';   
+                            </a>'; 
+                      $showDoc='';  
                     }
                     else{
                       echo "File Not Found";
                       $url='';
+                      $showDoc='hidden';
                     }
                              
                     ?>
@@ -69,7 +82,7 @@
             </table>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" <?php echo $showDoc;?> >
             <div class="panel panel-primary">
                 <div class="panel-heading">
                   <h4>Dokumen</h4>

@@ -28,7 +28,8 @@ class Model_draft extends CI_Model
 	{
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 						   a.penerima,a.id_status, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
-						   a.kegiatan, a.lokasi_kegiatan, a.dokumen,a.keterangan, a.create_date, b.nm_status');
+						   a.kegiatan, a.lokasi_kegiatan, a.dokumen,a.keterangan, a.create_date,
+						   a.penyelenggara, a.cp, b.nm_status');
         $this->db->from('data_agenda a');
         $this->db->join('master_status b',  'b.id_status = a.status_verifikasi', 'INNER');
         if ($id_group==='AJD') { 
@@ -48,7 +49,8 @@ class Model_draft extends CI_Model
 	{
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 						   a.penerima,a.id_status, a.id_opd, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
-						   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.create_date, b.nm_status');
+						   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.create_date,
+						   a.penyelenggara, a.cp, b.nm_status');
         $this->db->from('data_agenda a');
         $this->db->join('master_status b',      'b.id_status 	= a.id_status');
        // $this->db->where('a.status_verifikasi', 'SM');
@@ -435,8 +437,8 @@ class Model_draft extends CI_Model
 					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
 					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
 					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
-					//'penyelenggara' => escape($this->input->post('penyelenggara', TRUE)),
-					//'cp' => escape($this->input->post('cp', TRUE)),
+					'penyelenggara'   => escape($this->input->post('penyelenggara', TRUE)),
+					'cp' 			  => escape($this->input->post('cp', TRUE)),
 					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),				
 					'dokumen'		  => '',	
 					'status_verifikasi'=> escape('CC'),				

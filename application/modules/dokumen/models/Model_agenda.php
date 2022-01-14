@@ -115,7 +115,7 @@ class Model_agenda extends CI_Model
 	{
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 			a.penerima, a.dokumen, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan,
-			a.keterangan, a.create_date,a.id_status, b.nm_status');
+			a.keterangan, a.create_date,a.id_status, a.penyelenggara, a.cp, b.nm_status');
 		$this->db->from('data_agenda a');
 		$this->db->join('master_status b',  'b.id_status = a.id_status', 'INNER');
 		$this->db->where('token', escape($token));
