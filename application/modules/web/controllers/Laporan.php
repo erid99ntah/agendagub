@@ -14,26 +14,13 @@ class Laporan extends MY_Controller {
         $this->load->model(array('model_laporan' => 'mlap'));
    }
 
-    public function index()
-    {
+    public function export()
+    {   
+        
         $tanggal       = escape($this->input->get('tanggal', TRUE));
         $jenis_agenda  = escape($this->input->get('jenis_agenda', TRUE));
-        $jenis_dokumen = escape($this->input->get('jenis_dokumen', TRUE));
         $penerima      = escape($this->input->get('penerima', TRUE));
-
-       /* $cek = $this->mlap->cekAgenda($tanggal, $jenis_agenda, $penerima);
-
-        if ($this->mlap->validasiDataValue()==FALSE) 
-        {
-            validation_errors();
-        }
-        elseif ($cek <=0) 
-        {
-            error_message('danger', 'Peringatan!', 'Data '.tgl_indo($tanggal).' kosong...');
-            $this->index();
-        }else{            
-             $this->export_to_pdf($tanggal, $jenis_agenda, $penerima);            
-        }*/
+      
         $this->export_to_pdf($tanggal, $jenis_agenda, $penerima);            
     }
 
@@ -134,7 +121,7 @@ class Laporan extends MY_Controller {
         $pdf->lastPage();
         //---------------------------------------------------------
         //Close and output PDF document
-        $pdf->Output('daftar_agenda_'.$tanggal.'.pdf','I');
+        $pdf->Output('daftar_agenda_'.$tanggal.'.pdf','D');
         //---------------------------------------------------------
     }
 

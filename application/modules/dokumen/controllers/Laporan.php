@@ -164,7 +164,7 @@ class Laporan extends SLP_Controller {
 								<td style="width:10%;" align="center"><b>DIHADIRI</b></td>
 								<td style="width:10%;" align="center"><b>KETERANGAN</b></td>
 							</tr>';
-		$n = 1;
+		
 		
 			$total = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
 
@@ -173,10 +173,11 @@ class Laporan extends SLP_Controller {
 				   $tglAgenda = $tanggal.'-'.$i;
 				   $dataAgenda = $this->mlap->getDataAgenda($tglAgenda, $jenis_agenda, $penerima);
 				   
-				   $html .= '<tr><td colspan="10" style="background:#ccc;"> <strong> Tanggal : '.$tglAgenda.'</strong> </td></tr>';
+				   $html .= '<tr><td colspan="10" style="background:#ccc;"> <strong> Tanggal : '.tgl_indo($tglAgenda).'</strong> </td></tr>';
 
 				   if(count($dataAgenda) > 0) 
 				   {	
+				   		$n = 1;
 				   		foreach ($dataAgenda as $key => $dh) {
 							$html .= '<tr>';
 								$html .= '<td style="width:5%;text-align:center;">'.$n.'.</td>';
