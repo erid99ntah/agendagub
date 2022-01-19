@@ -24,6 +24,7 @@ class Users extends SLP_Controller {
 		$this->session_info['data_level']   = $this->muser->getDataLevelAkses();
 		$this->session_info['data_group']	= $this->muser->getDataListGroup();
 		$this->session_info['data_instansi']= $this->muser->getDataListInstansi();
+		$this->session_info['data_jenis_user']= $this->muser->getDataJenisUser();
     $this->template->build('form_admin/list', $this->session_info);
 	}
 
@@ -92,6 +93,7 @@ class Users extends SLP_Controller {
 				$row['id_opd']	= !empty($data) ? $data['id_opd'] : '';
 				$row['sub_opd']	= !empty($data) ? $data['sub_opd'] : '';
 				$row['nm_sub_opd']	= !empty($data) ? $data['nm_sub_opd'] : '';
+				$row['jenis_user']	= !empty($data) ? $data['jenis_user'] : '';
 				$row['email']		= !empty($data) ? $data['email'] : '';
 				$row['blokir']		= !empty($data) ? $data['blokir'] : 0;
 				$row['status']		= !empty($data) ? $data['id_status'] : 1;

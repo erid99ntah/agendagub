@@ -48,18 +48,31 @@ class Model_users extends CI_Model
 
    public function getDataListInstansi()
    {
-	    $this->db->where('id_status', 1);
-	    //$this->db->where('id_opd', 1);
-		$this->db->order_by('id_opd ASC');
+	    $this->db->where('id_status', '1');
+	    $this->db->order_by('id_opd ASC');
 		$query = $this->db->get('master_opd');
 
-	    $dd_instansi[''] = 'Pilih Data';
+	    $dd_opd[''] = 'Pilih Data';
 	    if ($query->num_rows() > 0) {
 	      foreach ($query->result() as $row) {
-	        $dd_instansi[$row->id_opd] = $row->nm_opd;
+	        $dd_opd[$row->id_opd] = $row->nm_opd;
 	      }
 	    }
-	    return $dd_instansi;
+	    return $dd_opd;
+   }
+
+   public function getDataJenisUser()
+   {
+	    $this->db->where('id_status', '1');	    
+		$query = $this->db->get('xi_sa_jenis_user');
+
+	    $dd_jenis[''] = 'Pilih Data';
+	    if ($query->num_rows() > 0) {
+	      foreach ($query->result() as $row) {
+	        $dd_jenis[$row->id_jenis] = $row->nm_jenis;
+	      }
+	    }
+	    return $dd_jenis;
    }
 
 	public function getDataLevelAkses()
@@ -123,6 +136,7 @@ class Model_users extends CI_Model
 											 a.fullname,
 											 a.foto_profile,
 											 a.blokir,
+											 a.jenis_user,
 											 a.id_status,
 											 (CASE
 											   WHEN d.pass_plain IS NULL THEN "-"
@@ -191,6 +205,7 @@ class Model_users extends CI_Model
 											 a.id_opd,
 											 a.sub_opd,
 											 a.nm_sub_opd,
+											 a.jenis_user,
 											 a.blokir,
 											 a.id_status,
 											 GROUP_CONCAT(b.id_group ORDER BY b.id_group ASC SEPARATOR ",") AS group_user');
@@ -243,6 +258,7 @@ class Model_users extends CI_Model
 			'nm_opd' 				=> $nm_opd,
 			'sub_opd' 				=> $sub_opd,
 			'nm_sub_opd' 			=> $nm_sub_opd,
+			'jenis_user' 			=> escape($this->input->post('jenis_user', TRUE)),
 			'validate_email_code'	=> '',
 			'validate_email_status'	=> 0,
 			'reset_password_code'	=> '',
@@ -302,6 +318,7 @@ class Model_users extends CI_Model
 			'nm_opd' 		=> $nm_opd,
 			'sub_opd' 		=> $sub_opd,
 			'nm_sub_opd' 	=> $nm_sub_opd,
+			'jenis_user' 	=> escape($this->input->post('jenis_user', TRUE)),
 			'mod_by' 	  	=> $create_by,
 			'mod_date'  	=> $create_date,
 			'mod_ip'    	=> $create_ip

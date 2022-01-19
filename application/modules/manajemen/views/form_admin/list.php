@@ -156,7 +156,7 @@
 
         <div class="row">
 
-          <div class="col-xs-12 col-sm-12">
+          <div class="col-xs-12 col-sm-6">
             <div class="form-group required">
               <label for="fullname" class="control-label" style="font-size:15px;"><b>Instansi User <font color="red">*</font></b></label>
               <?php
@@ -167,14 +167,16 @@
             </div>
           </div>
 
-          <!-- <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-6">
             <div class="form-group required">
-              <label for="fullname" class="control-label" style="font-size:15px;"><b>Sub Instansi User <font color="red">*</font></b></label>
-              <?php echo form_dropdown('sub_opd', array(''=>'Pilih Sub OPD'), $this->input->post('sub_opd', TRUE), 'class="select-all" id="sub_opd"'); ?>
+              <label for="fullname" class="control-label" style="font-size:15px;"><b>Jenis User <font color="red">*</font></b></label>
+              <?php
+              echo form_dropdown('jenis_user', $data_jenis_user, $this->input->post('jenis_user'), 'class="select-all" id="jenis_user"' );
+              echo form_error('jenis_user');
+              ?>
               <div class="help-block"></div>
             </div>
-          </div> -->
-
+          </div>
         </div>
 
         <div class="row">
@@ -559,6 +561,7 @@
           $('#username').val(dataUser.message.username);
           $('#email').val(dataUser.message.email);
           $('#id_opd').select2('val', dataUser.message.id_opd).trigger('change');
+          $('#jenis_user').select2('val', dataUser.message.jenis_user).trigger('change');
           
 
           $('#blokir').select2('val', dataUser.message.blokir);
