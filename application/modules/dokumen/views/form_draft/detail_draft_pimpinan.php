@@ -97,7 +97,7 @@
     </div>
   </div>
       <?php 
-      if ($this->app_loader->is_admin() ||  $this->app_loader->is_pimpinan()) 
+      if ($this->app_loader->is_admin() ||  $this->app_loader->is_pimpinan() || $this->app_loader->is_ajudan() ) 
       {
 
         if ($detail['id_status']=='SM' ) 

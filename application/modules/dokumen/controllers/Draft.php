@@ -70,8 +70,12 @@ class Draft extends SLP_Controller {
 					$row[] = $dl['lokasi_kegiatan'];
 					$row[] = $dl['penyelenggara'];
 					$row[] = $status_agenda;
+					
 					//$row[] = $status;
-					$row[] = '<button type="button" class="btn btn-xs btn-orange btnEdit" data-id="'.$dl['token'].'" title="Edit Agenda"><i class="fa fa-pencil"></i> </button>
+					$row[] = '
+				<a data-toggle="tooltip" data-placement="left" title="Detail Draft Agenda" href="'.site_url('dokumen/draft/review/'.$dl['token']).'/'.create_url($dl['nama_agenda']).'" 
+							  class="tooltips btn btn-xs btn-primary"><i class="fa fa-check"></i> Review</a>
+					<button type="button" class="btn btn-xs btn-orange btnEdit" data-id="'.$dl['token'].'" title="Edit Agenda"><i class="fa fa-pencil"></i> </button>
 					<button type="button" class="btn btn-xs btn-danger btnDelete" data-id="'.$dl['token'].'" title="Delete Agenda"><i class="fa fa-trash-o"></i> </button>';
 					$data[] = $row;
 				}

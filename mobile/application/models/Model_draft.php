@@ -55,7 +55,7 @@ class Model_draft extends CI_Model
         $this->db->join('master_status b',      'b.id_status 	= a.id_status');
        // $this->db->where('a.status_verifikasi', 'SM');
         $this->db->where('a.token', $token);
-
+        $this->db->limit(1);
         $data = $this->db->get();
         return $data->row_array();
 	}
@@ -389,8 +389,11 @@ class Model_draft extends CI_Model
     public function validasiDraft($role)
 	{
 		$this->form_validation->set_rules('nama_agenda',    'Nama Agenda',  'trim|required|min_length[3]');
-		$this->form_validation->set_rules('jenis_agenda',   'Jenis Agenda', 'required|trim');
-		$this->form_validation->set_rules('penerima', 		'Penerima', 	'required|trim');
+		if ($role=='add') {
+			$this->form_validation->set_rules('jenis_agenda',   'Jenis Agenda', 'required|trim');
+			$this->form_validation->set_rules('penerima', 		'Penerima', 	'required|trim');
+		}
+		
 		$this->form_validation->set_rules('tanggal', 	    'Tanggal',      'required');
 		$this->form_validation->set_rules('jam_mulai', 	    'Jam Mulai',    'required');
 		$this->form_validation->set_rules('jam_selesai', 	'Jam Selesai',  'required');
@@ -494,6 +497,114 @@ class Model_draft extends CI_Model
         $data = $this->db->get();
         return $data->result_array();      
     }
+
+
+    public function updateDataDraft()
+	{
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+
+		$create_by    = escape($this->input->post('create_by', TRUE));
+		$create_date  = gmdate('Y-m-d H:i:s', time()+60*60*7);
+		$create_ip    = $this->input->ip_address();
+		$token  = escape($this->input->post('token', TRUE));
+		$id_opd       =1;
+		$status_disposisi="BD";
+		$draft_agenda="";
+		$id_status="SM";
+
+		$detail = $this->getDetailDraft($token);
+
+		$base64 = $this->input->post('dokumen', TRUE);
+       	$tahun  = substr($detail['create_date'],0,4);
+	 	$bulan = substr($detail['create_date'],5,2); 
+
+       		$data = array(					
+					'nama_agenda'	  => escape($this->input->post('nama_agenda', TRUE)),				
+					'tanggal'		  => escape($this->input->post('tanggal', TRUE)),
+					'id_opd'		  => escape($id_opd),
+					//'penerima'		  => escape($this->input->post('penerima', TRUE)),
+					//'jenis_agenda'	  => escape($this->input->post('jenis_agenda', TRUE)),
+					'jam_mulai'	      => escape($this->input->post('jam_mulai', TRUE)),				
+					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
+					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
+					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
+					'penyelenggara'   => escape($this->input->post('penyelenggara', TRUE)),
+					'cp' 			  => escape($this->input->post('cp', TRUE)),
+					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),	
+					//'status_verifikasi'=> escape('CC'),				
+					//'status_disposisi'=> escape($status_disposisi),				
+					//'id_status'		  => escape($id_status),									
+					'mod_by'		  => $create_by,
+					'mod_date'		  => $create_date,
+					'mod_ip'		  => $create_ip
+
+					);
+					$this->db->where('token', $token);	
+					$this->db->update('data_agenda', $data);	
+
+		
+
+	 	if ($base64 !='' || $base64 !=NULL  ) 
+	 	{
+	 		$detailDraft = $this->getDetailDraft($token);
+	 		if (count($detailDraft >=0)) 
+	 		{
+	 			$foto = $detailDraft['dokumen'];
+	 			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.$tahun.'/'.$bulan.'/';	
+	 			if(file_exists($upload_path.'/'.$foto)){
+		            unlink($upload_path.'/'.$foto);   
+	 			}
+	 		}
+	 		$this->uploadBase64($token, $base64, $tahun, $bulan);
+	 	}	
+
+		return array('message'=>'SUCCESS', 'token'=>$token);
+	}
+
+
+	public function deleteDataDraft($token)
+	{
+		$detail = $this->getDetailDraft($token);
+		$hadir = $this->getDataDraftDihadiri($token);
+
+		if(count($hadir)>=1) 
+		{
+			return array('status'=>FALSE, 'message'=>'Draft tidak bisa dihapus karena sudah menjadi agenda yang dihadiri/diwakilkan');	
+		}
+		else
+		{
+			$tahun  = substr($detail['create_date'],0,4);
+	 		$bulan = substr($detail['create_date'],5,2); 
+	 		$foto = $detail['dokumen'];
+
+	 		if ($foto!='' || $foto !=NULL) 
+	 		{
+	 			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.$tahun.'/'.$bulan.'/';	
+	 			if(file_exists($upload_path.'/'.$foto)){
+		            unlink($upload_path.'/'.$foto);   
+	 			}
+	 		}	
+ 			
+
+ 			$this->db->where('token', $token);	
+			$this->db->delete('data_agenda');	
+			return array('status'=>TRUE, 'message'=>'Draft berhasil dihapus');	
+		}
+	}
+
+	private function getDataDraftDihadiri($token)
+	{
+		$stat = array('SH', 'SW');
+		$this->db->select('id_agenda');
+		$this->db->from('data_agenda');
+		$this->db->where('token', $token);
+		$this->db->where_in('id_status', $stat);
+		$this->db->limit(1);
+		$data = $this->db->get();
+		return $data->row_array();
+
+	}
 }
 
 // This is the end of agenda model

@@ -42,7 +42,7 @@
                  <div class="col-xs-12 col-sm-3">
                   <div class="form-group">
                     <label style="font-size:16px;"><b>Tanggal</b></label>
-                    <input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Tanggal Kegiatan" >                    
+                    <input type="text" class="form-control datepicker" name="tanggal" placeholder="Tanggal Kegiatan" >                    
                   </div>
                 </div>
 
@@ -85,13 +85,13 @@
               <thead>
                 <tr>
                   <th width="3%">#</th>
-                  <th width="15%">Nama Agenda</th>
+                  <th width="10%">Nama Agenda</th>
                   <th width="5%">Jenis Agenda</th>
                   <th width="10%">Tanggal</th>
                   <th width="5%">Jam</th>
                   <th width="5%">Kegiatan</th>
                   <th width="15%">Lokasi</th>                
-                  <th width="15%">Penyelenggara</th>                
+                  <th width="10%">Penyelenggara</th>                
                   <th width="10%">Status Agenda</th>
                   <th width="5%">Action</th>
                 </tr>
@@ -152,7 +152,7 @@
               <label for="tanggal" class="control-label"><b>Tanggal Kegiatan <font color="red">*</font></b></label>
               
               <div class="input-group date datepicker" style="padding:0px;">
-                  <input type="text" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal Kegiatan" value="<?php echo date('Y-m-d');?>">
+                  <input type="text" class="form-control" name="tanggal" id="tanggal" placeholder="Tanggal Kegiatan" >
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
               </div>
               <div class="help-block"></div>
@@ -403,7 +403,7 @@
     run_waitMe($('#frmEntry'));
     bootbox.dialog({
       title: "Konfirmasi",
-      message: "Apakah anda ingin menyimpan data fasilitas layanan kesehatan ini ?",
+      message: "Apakah anda ingin menyimpan data draft ini ?",
       buttons: {
         "cancel" : {
           "label" : "<i class='fa fa-times'></i> Tidak",
@@ -525,7 +525,7 @@
     run_waitMe($('#formParent'));
     bootbox.dialog({
       title: "Konfirmasi",
-      message: "Apakah anda ingin menghapus data fasyankes ini ?",
+      message: "Apakah anda ingin menghapus data draft ini ?",
       buttons: {
         "cancel" : {
           "label" : "<i class='fa fa-times'></i> Tidak",
@@ -616,7 +616,7 @@
     run_waitMe($('#frmEntryReview'));
     bootbox.dialog({
       title: "Konfirmasi",
-      message: "Apakah anda ingin menyimpan data fasilitas layanan kesehatan ini ?",
+      message: "Apakah anda ingin menyimpan data draft ini ?",
       buttons: {
         "cancel" : {
           "label" : "<i class='fa fa-times'></i> Tidak",

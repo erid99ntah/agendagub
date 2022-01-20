@@ -352,4 +352,76 @@ class Draft extends RestController {
         }           
     }
 
+
+    public function update_draft_post()
+    {
+        $token     = escape($this->post('token'));
+        $create_by = escape($this->post('id_user'));
+        $detail  = $this->mag->getDetailDraft($token);
+
+        if (count($detail) <=0) {
+             $this->response( [
+                    'status'  =>true,
+                    'info'    =>false,
+                    'message' =>'Data Agenda Tidak Ditemukan'
+                ], 200 );
+        }else{
+
+             if($this->mag->validasiDraft("edit") == FALSE) 
+             {
+
+                 $this->response( [
+                        'status'  =>true,
+                        'info'    =>false,
+                        'message' => validation_errors()
+                    ], 200 );
+             }else{
+
+                 $data = $this->mag->updateDataDraft();
+                 $this->response( [
+                        'status'  =>true,
+                        'info'    =>true,
+                        'message' => 'Draft berhasil diupdate',
+                        'token'   => $data['token']
+                    ], 200 );
+            }
+        }
+    }
+
+    public function delete_draft_post()
+    {
+        $token   = escape($this->post('token'));
+
+        $detail  = $this->mag->getDetailDraft($token);
+
+        if (count($detail) <=0) {
+             $this->response( [
+                    'status'  =>true,
+                    'info'    =>false,
+                    'message' =>'Data Tidak Ditemukan'
+                ], 200 );
+        }
+        else
+        {           
+             $data = $this->mag->deleteDataDraft($token);
+             if ($data['status']==FALSE) 
+             {
+                $this->response( [
+                    'status'  =>true,
+                    'info'    =>false,
+                    'message' => $data['message']
+                ], 200 );
+             }
+             else
+             {
+               $this->response( [
+                    'status'  =>true,
+                    'info'    =>true,
+                    'message' => 'Draft berhasil dihapus'
+                ], 200 ); 
+             }
+             
+        }
+    }
+
 }
