@@ -11,7 +11,7 @@ class Laporan extends SLP_Controller {
 	public function __construct()
   {
     parent::__construct();
-		$this->load->model(array('model_laporan' => 'mlap', 'master/model_master' => 'mmas'));
+		$this->load->model(array('model_laporan' => 'mlap', 'dokumen/model_master' => 'mmas'));
   }
 
 	public function index()
@@ -155,14 +155,15 @@ class Laporan extends SLP_Controller {
 							<tr>
 								<td style="width:5%;" align="center"><b>No.</b></td>
 								<td style="width:10%;" align="center"><b>NAMA AGENDA</b></td>
-								<td style="width:10%;" align="center"><b>JAM MULAI</b></td>
-								<td style="width:10%;" align="center"><b>JAM SELESAI</b></td>
+								<td style="width:5%;" align="center"><b>JAM MULAI</b></td>
+								<td style="width:5%;" align="center"><b>JAM SELESAI</b></td>
 								<td style="width:10%;" align="center"><b>KEGIATAN</b></td>
 								<td style="width:10%;" align="center"><b>LOKASI KEGIATAN</b></td>
 								<td style="width:10%;" align="center"><b>PENYELENGGARA</b></td>
 								<td style="width:10%;" align="center"><b>CP</b></td>
 								<td style="width:10%;" align="center"><b>DIHADIRI</b></td>
 								<td style="width:10%;" align="center"><b>KETERANGAN</b></td>
+								<td style="width:10%;" align="center"><b>DIINPUT OLEH</b></td>
 							</tr>';
 		
 		
@@ -173,7 +174,7 @@ class Laporan extends SLP_Controller {
 				   $tglAgenda = $tanggal.'-'.$i;
 				   $dataAgenda = $this->mlap->getDataAgenda($tglAgenda, $jenis_agenda, $penerima);
 				   
-				   $html .= '<tr><td colspan="10" style="background:#ccc;"> <strong> Tanggal : '.tgl_indo($tglAgenda).'</strong> </td></tr>';
+				   $html .= '<tr><td colspan="11" style="background:#ccc;"> <strong> Tanggal : '.tgl_indo($tglAgenda).'</strong> </td></tr>';
 
 				   if(count($dataAgenda) > 0) 
 				   {	
@@ -182,14 +183,15 @@ class Laporan extends SLP_Controller {
 							$html .= '<tr>';
 								$html .= '<td style="width:5%;text-align:center;">'.$n.'.</td>';
 								$html .= '<td style="width:10%;text-align:center;">'.$dh['nama_agenda'].'</td>';
-								$html .= '<td style="width:10%;">'.$dh['jam_mulai'].'</td>';
-								$html .= '<td style="width:10%;">'.$dh['jam_selesai'].'</td>';
+								$html .= '<td style="width:5%;">'.$dh['jam_mulai'].'</td>';
+								$html .= '<td style="width:5%;">'.$dh['jam_selesai'].'</td>';
 								$html .= '<td style="width:10%;">'.$dh['kegiatan'].'</td>';
 								$html .= '<td style="width:10%;">'.$dh['lokasi_kegiatan'].'</td>';
 								$html .= '<td style="width:10%;">'.$dh['penyelenggara'].'</td>';
 								$html .= '<td style="width:10%;">'.$dh['cp'].'</td>';
 								$html .= '<td style="width:10%;">'.$this->mlap->getStatusAgenda($dh['id_status']).'</td>';
 								$html .= '<td style="width:10%;">'.$dh['keterangan'].'</td>';
+								$html .= '<td style="width:10%;">'.$this->mmas->getUserProfileByUsername($dh['create_by'])['fullname'].'</td>';
 								
 							$html .= '</tr>';
 							$n++;
@@ -197,7 +199,7 @@ class Laporan extends SLP_Controller {
 				   }
 				   else
 				   {
-				   		$html .= '<tr><td colspan="10">Data Belum Ada </td></tr>';
+				   		$html .= '<tr><td colspan="11">Data Belum Ada </td></tr>';
 				   }					
 			}
 			

@@ -73,15 +73,11 @@ class Model_agenda extends CI_Model
 		$this->db->from('data_agenda a');        
 		$this->db->join('master_status b',      'b.id_status = a.status_verifikasi', 'INNER');
 		
-		$this->db->where_in('a.id_status', $hadir);
-	        //$this->db->where('a.penerima', $token);
-		if ($this->app_loader->is_pimpinan() || $this->app_loader->is_ajudan()) {
-			$this->db->where('a.jenis_agenda', 'P');
-		}
+		$this->db->where_in('a.id_status', $hadir);	   
+		$this->db->where('a.jenis_agenda', 'P');
+		
 
-		if ($this->app_loader->is_sekretaris()) {
-			$this->db->where('a.jenis_agenda', 'S');
-		}
+		
 
 		if(isset($post['jenis_agenda']) AND $post['jenis_agenda'] != '')
 			$this->db->where('a.jenis_agenda', $post['jenis_agenda']);
@@ -115,7 +111,7 @@ class Model_agenda extends CI_Model
 	{
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 			a.penerima, a.dokumen, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan,
-			a.keterangan, a.create_date,a.id_status, a.penyelenggara, a.cp, b.nm_status');
+			a.keterangan, a.create_date,a.id_status, a.penyelenggara, a.keterangan_hadir, a.penerima_disposisi, a.cp, b.nm_status');
 		$this->db->from('data_agenda a');
 		$this->db->join('master_status b',  'b.id_status = a.id_status', 'INNER');
 		$this->db->where('token', escape($token));

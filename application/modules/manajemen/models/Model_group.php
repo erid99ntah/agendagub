@@ -44,7 +44,7 @@ class Model_group extends CI_Model
   public function getDataListGroup()
   {
     $this->db->select('a.*,
-											CONCAT("Module: ",GROUP_CONCAT(DISTINCT(d.label_module) ORDER BY d.id_module ASC SEPARATOR ", ")) AS hak_akses');
+						CONCAT("Module: ",GROUP_CONCAT(DISTINCT(d.label_module) ORDER BY d.id_module ASC SEPARATOR ", ")) AS hak_akses');
     $this->db->from('xi_sa_group a');
 		$this->db->join('xi_sa_group_privileges b', 'a.id_group = b.id_group', 'left');
 		$this->db->join('xi_sa_rules c', 'b.id_rules = c.id_rules', 'left');

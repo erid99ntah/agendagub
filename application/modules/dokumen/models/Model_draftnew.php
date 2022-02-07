@@ -6,7 +6,7 @@
  * @author Diskominfo Sumbar
  */
 
-class Model_draft extends CI_Model
+class Model_draftnew extends CI_Model
 {
 	protected $_publishDate = "";
 	public function __construct()
@@ -18,10 +18,10 @@ class Model_draft extends CI_Model
 	public function getDataPenerimaNew()
 	{	
 		$arr=array(1, 88);
-			$this->db->where('id_opd', 1);
+			$this->db->where('id_opd ', 1);
+			$this->db->where_not_in('id_users ', $arr);
 			$this->db->where('id_jabatan', 1);
 			$this->db->where('jenis_user', 1);
-			$this->db->where_not_in('id_users', $arr);
 			$this->db->order_by('id_users ASC');
 			$query = $this->db->get('xi_sa_users');
 		    $dd_prov[''] = 'Pilih Penerima';
@@ -33,19 +33,30 @@ class Model_draft extends CI_Model
 	    return $dd_prov;
 	}
 
+	public function getDaftarStatusAgenda()
+	{	
+		$query = $this->db->get('master_status');
+		$dd[''] = 'Pilih Status Agenda';
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$dd[$row['id_status']] = $row['nm_status'];
+			}
+		}
+		return $dd;
+	}
+
 
 	public function validasiDataValue()
 	{
-		$this->form_validation->set_rules('nama_agenda',   'Nama Agenda',  'trim|required|min_length[3]');
-		$this->form_validation->set_rules('jenis_agenda',   'Jenis Agenda', 'required|trim');
+		$this->form_validation->set_rules('nama_agenda',   'Nama Agenda',  'trim|required|min_length[3]');		
 		$this->form_validation->set_rules('penerima', 		'Penerima', 	'required|trim');
 		$this->form_validation->set_rules('tanggal', 	    'Tanggal',      'required|valid_date');
 		$this->form_validation->set_rules('jam_mulai', 	    'Jam Mulai',    'required');
 		$this->form_validation->set_rules('jam_selesai', 	'Jam Selesai',  'required');
 		$this->form_validation->set_rules('kegiatan',       'Kegiatan',      'required|trim');
 		$this->form_validation->set_rules('lokasi_kegiatan',' Lokasi Kegiatan',      'required|trim');
-		$this->form_validation->set_rules('penyelenggara',  'Penyelenggara Kegiatan',      'required|trim');
-		$this->form_validation->set_rules('cp',	            'Kontak Person',      'required|trim');
+		$this->form_validation->set_rules('penyelenggara',  'Penyelenggara Kegiatan',      'required|trim');		
+		$this->form_validation->set_rules('id_status',	    'Status Draft',      'required|trim');
 		validation_message_setting();
 		if ($this->form_validation->run() == FALSE)
 			return false;
@@ -139,9 +150,9 @@ class Model_draft extends CI_Model
 	{
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.status_verifikasi, a.nama_agenda,a.status_disposisi, a.tanggal,
 			a.penerima, a.id_status, a.dokumen, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan, a.penyelenggara, a.cp,
-			a.keterangan, a.create_date, a.penyelenggara, a.cp, a.penerima_disposisi, a.keterangan_hadir, b.nm_status');
+			a.keterangan, a.create_date, a.penyelenggara, a.keterangan_hadir, a.penerima_disposisi, a.cp, b.nm_status');
 		$this->db->from('data_agenda a');        
-		$this->db->join('master_status b',  'b.id_status = a.id_status');
+		$this->db->join('master_status b',  'b.id_status = a.id_status', 'LEFT');
 		$this->db->where('token', escape($token));
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -217,18 +228,22 @@ class Model_draft extends CI_Model
 					'tanggal'		  => escape($this->input->post('tanggal', TRUE)),
 					'id_opd'		  => escape($id_opd),
 					'penerima'		  => escape($this->input->post('penerima', TRUE)),
-					'jenis_agenda'	  => escape($this->input->post('jenis_agenda', TRUE)),
+					'jenis_agenda'	  => escape('P'),
 					'jam_mulai'	      => escape($this->input->post('jam_mulai', TRUE)),				
 					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
 					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
 					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
-					'penyelenggara' => escape($this->input->post('penyelenggara', TRUE)),
-					'penyelenggara' => escape($this->input->post('penyelenggara', TRUE)),
-					'cp'	  => escape($this->input->post('cp', TRUE)),				
-					'dokumen'		  => $gambar,	
-					'status_verifikasi'	  => escape($id_status),				
+					'penyelenggara'   => escape($this->input->post('penyelenggara', TRUE)),
+					'penyelenggara'   => escape($this->input->post('penyelenggara', TRUE)),
+					'cp'	  	      => escape($this->input->post('cp', TRUE)),				
+					'dokumen'		  => $gambar,
+					'keterangan'	    => escape($this->input->post('keterangan', TRUE)),	
+					'status_verifikasi'	=> escape($id_status),				
 					'status_disposisi'=> escape($status_disposisi),				
-					'id_status'		  => escape($id_status),				
+					'id_status'		  => escape($id_status),	
+					'id_status' => escape($this->input->post('id_status', TRUE)),			
+					'penerima_disposisi' => escape($this->input->post('penerima_disposisi', TRUE)),			
+					'keterangan_hadir' => escape($this->input->post('keterangan_hadir', TRUE)),			
 					'create_by'		  => $create_by,
 					'create_date'	  => $create_date,
 					'create_ip'		  => $create_ip,
@@ -239,7 +254,7 @@ class Model_draft extends CI_Model
 					);
 					$this->db->insert('data_agenda', $data);
 
-					$penerima = $this->mmas->getUserSekretaris()['token'];
+					/*$penerima = $this->mmas->getUserSekretaris()['token'];
 
 					$nm_pengirim = $this->mmas->getUserFullname($id_user);
 					$token_disposisi='';
@@ -270,7 +285,8 @@ class Model_draft extends CI_Model
 					}
 					else{
 						$errNotifikasi='Notifikasi Terkirim';
-					}
+					}*/
+					$errNotifikasi='';
 
 		return array('message'=>'SUCCESS', 'nama_agenda'=>$nama_agenda, 'notifikasi'=>$errNotifikasi);	
 	}
@@ -302,12 +318,15 @@ class Model_draft extends CI_Model
 					'tanggal'		  => escape($this->input->post('tanggal', TRUE)),
 					'id_opd'		  => escape($id_opd),
 					'penerima'		  => escape($this->input->post('penerima', TRUE)),
-					'jenis_agenda'	  => escape($this->input->post('jenis_agenda', TRUE)),	
+					'jenis_agenda'	  => escape('P'),	
 					'jam_mulai'	      => escape($this->input->post('jam_mulai', TRUE)),				
 					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
 					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
 					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
-					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),													
+					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),	
+					'id_status' => escape($this->input->post('id_status', TRUE)),			
+					'penerima_disposisi' => escape($this->input->post('penerima_disposisi', TRUE)),			
+					'keterangan_hadir' => escape($this->input->post('keterangan_hadir', TRUE)),													
 					'create_by'		  => $create_by,
 					'create_date'	  => $create_date,
 					'create_ip'		  => $create_ip,
@@ -371,13 +390,16 @@ class Model_draft extends CI_Model
 					'tanggal'		  => escape($this->input->post('tanggal', TRUE)),
 					'id_opd'		  => escape($id_opd),
 					'penerima'		  => escape($this->input->post('penerima', TRUE)),
-					'jenis_agenda'	  => escape($this->input->post('jenis_agenda', TRUE)),	
+					'jenis_agenda'	  => escape('P'),	
 					'jam_mulai'	      => escape($this->input->post('jam_mulai', TRUE)),				
 					'jam_selesai'	  => escape($this->input->post('jam_selesai', TRUE)),
 					'kegiatan'		  => escape($this->input->post('kegiatan', TRUE)),
 					'lokasi_kegiatan' => escape($this->input->post('lokasi_kegiatan', TRUE)),
 					'keterangan'	  => escape($this->input->post('keterangan', TRUE)),													
-					'dokumen'	  	  => escape($update_gambar),													
+					'dokumen'	  	  => escape($update_gambar),	
+					'id_status' => escape($this->input->post('id_status', TRUE)),			
+					'penerima_disposisi' => escape($this->input->post('penerima_disposisi', TRUE)),			
+					'keterangan_hadir' => escape($this->input->post('keterangan_hadir', TRUE)),													
 					'create_by'		  => $create_by,
 					'create_date'	  => $create_date,
 					'create_ip'		  => $create_ip,

@@ -76,7 +76,11 @@ class Agenda extends RestController {
                         'nm_status'         =>$status_verifikasi,
                         'dokumen'           =>$url,
                         'id_status'         =>$dd['id_status'],
+                        'penerima_disposisi'         =>$dd['penerima_disposisi'],
+                        'keterangan_hadir'         =>$dd['keterangan_hadir'],
                         'status_agenda'         =>$cekStatusAgenda,
+                        'create_by'         =>$dd['create_by'],
+                        'create_user'       =>$this->mmas->getUsersProfileByUsername($dd['create_by'])['fullname']
                         );
                array_push($list, $i);
             }
@@ -144,8 +148,12 @@ class Agenda extends RestController {
                         'nm_status'         =>$status_verifikasi,
                         'dokumen'           =>$url,
                         'id_status'         =>$detail['id_status'],
+                          'penerima_disposisi'         =>$detail['penerima_disposisi'],
+                        'keterangan_hadir'         =>$detail['keterangan_hadir'],
                         'status_agenda'     =>$cekStatusAgenda,
-                        'penerima_disposisi'=>$penerima_disposisi
+                        'create_by'         =>$detail['create_by'],
+                        'create_user'       =>$this->mmas->getUsersProfileByUsername($detail['create_by'])['fullname']
+                        //'penerima_disposisi'=>$penerima_disposisi
                         );
 
             $this->response( [

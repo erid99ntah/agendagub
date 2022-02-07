@@ -127,7 +127,7 @@ class Model_home extends CI_Model
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 							   a.penerima, a.status_verifikasi,a.id_status, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan, b.nm_status');
         $this->db->from('data_agenda a');        
-        $this->db->join('master_status b',      'b.id_status = a.status_verifikasi', 'INNER');
+        $this->db->join('master_status b',      'b.id_status = a.id_status', 'INNER');
         $this->db->where('a.jenis_agenda', 'P');
         $this->db->where_in('a.id_status', 'SH');
         $data = $this->db->get();
@@ -192,7 +192,7 @@ class Model_home extends CI_Model
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 							   a.penerima, a.status_verifikasi,a.id_status, a.jam_mulai, a.jam_selesai, a.kegiatan, a.lokasi_kegiatan, b.nm_status');
         $this->db->from('data_agenda a');        
-        $this->db->join('master_status b',      'b.id_status = a.status_verifikasi', 'INNER');
+        $this->db->join('master_status b',      'b.id_status = a.id_status', 'INNER');
         $this->db->where('a.jenis_agenda', 'P');
         $this->db->where_in('a.tanggal', $tgl);
         $this->db->where_in('a.id_status', $status);
@@ -314,6 +314,90 @@ class Model_home extends CI_Model
         $data = $this->db->get();
         return $data->row_array();      
     }
+
+
+    public function validasiDataSandi()
+	{
+	  	$this->form_validation->set_rules('password', 	   'Sandi Lama', 			'required|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/]');
+	    $this->form_validation->set_rules('password_baru', 'Sandi Baru', 			'required|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/]');
+	  	$this->form_validation->set_rules('conf_password', 'Konfirmasi Sandi Baru', 'required|matches[password_baru]');
+			
+	  	validation_message_setting();
+	    if ($this->form_validation->run() == FALSE)
+	      return false;
+	    else
+	      return true;
+	}
+
+	public function updatePassword()
+	{
+		$username = $this->app_loader->current_account();
+		$cek = $this->getProfileUser($username);
+
+		$password = escape($this->input->post('password', TRUE));
+		$password_baru = escape($this->input->post('password_baru', TRUE));
+
+		if (count($cek) <=0) 
+		{
+			error_message('danger', 'Peringatan!', 'Data Tidak ditemukan...');
+			redirect('home/sandi');
+		}
+		else
+		{
+			$token 		    = $cek['token'];
+			$hash_password  = $cek['password'];
+			$id_users  	    = $cek['id_users'];
+		
+			if ($this->bcrypt->check_password($password, $hash_password))
+			{	
+				$data = array('password' => $this->bcrypt->hash_password($password_baru));
+
+				$this->db->where('id_users', $id_users);
+				$this->db->where('token', $token);
+				$this->db->update('xi_sa_users', $data);
+				
+				if($password_baru != "" && !$this->app_loader->is_admin() ){
+					$this->db->set('pass_plain', $password_baru);
+					$this->db->where('id_users', abs($id_users));
+					$this->db->update('xi_sa_users_default_pass');
+				}
+				return TRUE;
+			
+			}
+			else
+			{
+				error_message('danger', 'Peringatan!', 'Sandi Lama Salah...');
+				redirect('home/sandi');
+			}
+		}
+	}
+
+	private function getProfileUser($username)
+	{
+		$this->db->select('  a.id_users,
+							 a.token,
+							 a.username,
+							 a.password,
+							 a.email,
+							 a.fullname,
+							 a.foto_profile,
+							 a.blokir,
+							 a.id_status,
+							 (CASE
+							   WHEN d.pass_plain IS NULL THEN "-"
+							   ELSE d.pass_plain
+							 END) AS pass_plain');
+    	$this->db->from('xi_sa_users a');
+		$this->db->join('xi_sa_users_privileges b', 'a.id_users = b.id_users', 'left');
+		$this->db->join('xi_sa_group c', 'b.id_group = c.id_group', 'left');
+		$this->db->join('xi_sa_users_default_pass d', 'a.id_users = d.id_users', 'left');
+		$this->db->where('b.id_status', '1');
+		$this->db->where('a.username', $username);
+		$this->db->limit(1);
+		$data = $this->db->get();
+
+		return $data->row_array();
+	}
 }
 
 // This is the end of auth signin model

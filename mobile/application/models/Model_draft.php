@@ -29,16 +29,13 @@ class Model_draft extends CI_Model
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 						   a.penerima,a.id_status, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
 						   a.kegiatan, a.lokasi_kegiatan, a.dokumen,a.keterangan, a.create_date,
-						   a.penyelenggara, a.cp, b.nm_status');
+						   a.penyelenggara, a.cp, a.penerima_disposisi, a.keterangan_hadir, a.create_by, b.nm_status');
         $this->db->from('data_agenda a');
-        $this->db->join('master_status b',  'b.id_status = a.status_verifikasi', 'INNER');
-        if ($id_group==='AJD') { 
-        	 $this->db->where('a.id_status', 'SM');
-        }
-        elseif ($id_group==='PIM') {
-        	$this->db->where('a.jenis_agenda', 'P');
-        	$this->db->where('a.id_status', 'SM');
-        }      
+        $this->db->join('master_status b',  'b.id_status = a.id_status', 'INNER');
+               
+    	$this->db->where('a.jenis_agenda', 'P');
+    	$this->db->where('a.id_status', 'SM');
+       
         $this->db->group_by('a.id_agenda');
         $this->db->order_by('a.id_agenda DESC');
         $data = $this->db->get();
@@ -50,9 +47,9 @@ class Model_draft extends CI_Model
 		$this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
 						   a.penerima,a.id_status, a.id_opd, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
 						   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.create_date,
-						   a.penyelenggara, a.cp, b.nm_status');
+						   a.penyelenggara, a.cp,a.penerima_disposisi, a.keterangan_hadir, a.create_by, b.nm_status');
         $this->db->from('data_agenda a');
-        $this->db->join('master_status b',      'b.id_status 	= a.id_status');
+        $this->db->join('master_status b',      'b.id_status 	= a.id_status', 'INNER');
        // $this->db->where('a.status_verifikasi', 'SM');
         $this->db->where('a.token', $token);
         $this->db->limit(1);
@@ -222,10 +219,14 @@ class Model_draft extends CI_Model
 
 	public function getDataPenerima($jenis_agenda)
 	{
+		$arr=array(1, 88);
 		$this->db->select('token, fullname, id_opd, nm_opd');
-		$this->db->from('xi_sa_users');				 
-		$this->db->where('id_users !=', 1);
-		$this->db->where('id_users >', 90);
+		$this->db->from('xi_sa_users');			 
+		
+		$this->db->where('id_opd ', 1);
+		$this->db->where_not_in('id_users ', $arr);
+		$this->db->where('id_jabatan', 1);
+		$this->db->where('jenis_user', 1);
 
 		$data=$this->db->get();
 		return $data->result_array();
@@ -551,10 +552,13 @@ class Model_draft extends CI_Model
 	 		if (count($detailDraft >=0)) 
 	 		{
 	 			$foto = $detailDraft['dokumen'];
-	 			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.$tahun.'/'.$bulan.'/';	
-	 			if(file_exists($upload_path.'/'.$foto)){
-		            unlink($upload_path.'/'.$foto);   
-	 			}
+	 			if ($foto!='' || $foto !=NULL) 
+	 			{
+		 			$upload_path = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']).'../images/agenda/'.$tahun.'/'.$bulan.'/';	
+		 			if(file_exists($upload_path.'/'.$foto)){
+			            unlink($upload_path.'/'.$foto);   
+		 			}
+		 		}
 	 		}
 	 		$this->uploadBase64($token, $base64, $tahun, $bulan);
 	 	}	

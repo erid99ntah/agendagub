@@ -56,6 +56,7 @@ class Users extends SLP_Controller {
 		                   $password.
 		                '</ul>';
 					$row[] = $u['fullname'];
+					$row[] = convert_jabatan($u['id_jabatan']);
 					$row[] = ($u['email'] != '') ? $u['email'] : '-';
 	        $row[] = $nm_group;
 					$row[] = convert_blokir($u['blokir']);
@@ -93,6 +94,7 @@ class Users extends SLP_Controller {
 				$row['id_opd']	= !empty($data) ? $data['id_opd'] : '';
 				$row['sub_opd']	= !empty($data) ? $data['sub_opd'] : '';
 				$row['nm_sub_opd']	= !empty($data) ? $data['nm_sub_opd'] : '';
+				$row['id_jabatan']	= !empty($data) ? $data['id_jabatan'] : '';
 				$row['jenis_user']	= !empty($data) ? $data['jenis_user'] : '';
 				$row['email']		= !empty($data) ? $data['email'] : '';
 				$row['blokir']		= !empty($data) ? $data['blokir'] : 0;
@@ -172,7 +174,7 @@ class Users extends SLP_Controller {
         if($data['message'] == 'SUCCESS') {
           $result = array('status' => 1, 'message' => 'Data user berhasil dihapus...', 'csrfHash' => $csrfHash);
 				} else {
-          $result = array('status' => 0, 'message' => 'Proses delete data user gagal, silahkan periksa kembali data yang akan dihapus...', 'csrfHash' => $csrfHash);
+          $result = array('status' => 0, 'message' => 'User gagal dihapus, cek apakah user terdaftar sebagai penerima agenda...', 'csrfHash' => $csrfHash);
         }
       } else {
         $result = array('status' => 0, 'message' => 'Proses delete data gagal...', 'csrfHash' => $csrfHash);
@@ -337,6 +339,32 @@ class Users extends SLP_Controller {
 		}
 	}
 
+	public function jabatan()
+	{
+			if (!$this->input->is_ajax_request()) {
+	   		exit('No direct script access allowed');
+			} else {
+				$session  = $this->app_loader->current_account();
+				$csrfHash = $this->security->get_csrf_hash();
+				$opdId = $this->input->get('opdId', TRUE);
+				if(!empty($opdId)AND !empty($session)) {
+					$data = $this->muser->getDataJabatan($opdId);
+					if(count($data) > 0) {
+						$row = array();
+						foreach ($data as $key => $val) {
+							$row['id'] 		= $val['id_jabatan'];
+							$row['text']	= $val['nm_jabatan'];
+							$hasil[] = $row;
+						}
+						$result = array('status' => 1, 'message' => $hasil, 'csrfHash' => $csrfHash);
+					} else
+						$result = array('status' => 0, 'message' => '', 'csrfHash' => $csrfHash);
+				} else {
+					$result = array('status' => 0, 'message' => '', 'csrfHash' => $csrfHash);
+				}
+				$this->output->set_content_type('application/json')->set_output(json_encode($result));
+			}
+	}
 }
 
 // This is the end of users class

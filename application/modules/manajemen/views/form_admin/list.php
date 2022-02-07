@@ -102,13 +102,14 @@
                 <tr>
                   <th width="3%"><input type="checkbox" id="checkAll"></th>
                   <th width="3%">#</th>
-                  <th width="25%">Pengguna</th>
-                  <th width="20%">Nama Lengkap</th>
+                  <th width="27%">Pengguna</th>
+                  <th width="15%">Nama Lengkap</th>
+                  <th width="15%">Jabatan</th>
                   <th width="15%">Email</th>
                   <th width="15%">Group</th>
-                  <th width="6%">Blokir</th>
-                  <th width="10%">Status</th>
-                  <th width="3%">Edit</th>
+                  <th width="5%">Blokir</th>
+                  <th width="5%">Status</th>
+                  <th width="5%">Edit</th>
                 </tr>
               </thead>
             </table>
@@ -169,10 +170,10 @@
 
           <div class="col-xs-12 col-sm-6">
             <div class="form-group required">
-              <label for="fullname" class="control-label" style="font-size:15px;"><b>Jenis User <font color="red">*</font></b></label>
+              <label for="id_jabatan" class="control-label" style="font-size:15px;"><b>Jabatan User <font color="red">*</font></b></label>
               <?php
-              echo form_dropdown('jenis_user', $data_jenis_user, $this->input->post('jenis_user'), 'class="select-all" id="jenis_user"' );
-              echo form_error('jenis_user');
+              echo form_dropdown('id_jabatan', array(''=>'Pilih Jabatan'), $this->input->post('id_jabatan'), 'class="select-all" id="id_jabatan"' );
+              echo form_error('id_jabatan');
               ?>
               <div class="help-block"></div>
             </div>
@@ -241,173 +242,11 @@
 </div><!-- /.modal -->
 
 
-<div class="modal fade in" id="modalEntryFormPegawai" tabindex="-1" role="dialog" aria-labelledby="modalEntryLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" id="frmEntrPegawai">
-    <div class="modal-content">
-      <div class="modal-header" style="padding:10px 15px 10px 15px;">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><b>FORM ENTRI DATA USER</b></h4>
-      </div>
-      <?php echo form_open(site_url('manajemen/users/add'), array('id' => 'formEntryPegawai')); ?>
-      <div class="modal-body" style="padding:15px 15px 5px 15px;">
-        <div id="errEntryPegawai"></div>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="form-group required">
-              <label for="fullname" class="control-label" style="font-size:15px;"><b>Instansi User <font color="red">*</font></b></label>
-              <?php
-              echo form_dropdown('id_opd', $data_instansi, $this->input->post('id_opd'), 'class="select-all" id="id_opd"' );
-              echo form_error('id_opd');
-              ?>
-              <div class="help-block"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <?php echo form_hidden('tokenId', ''); ?>
-          <div class="col-xs-12 col-sm-2">
-            <div class="form-group required">
-              <label for="fullname" class="control-label" style="font-size:15px;"><b>Pilih Pegawai <font color="red">*</font></b></label>
-              <br><button type="button" class="btn btn-primary-alt" data-toggle="modal" data-target="#modalPilihPegawai"> Pilih Pegawai </button>
-              <div class="help-block"></div>
-            </div>
-          </div>  
-
-
-          <div class="col-xs-12 col-sm-5">
-            <div class="form-group required">
-              <label for="nip" class="control-label"><b>NIP <font color="red">*</font></b></label>
-              <input type="text" class="form-control nip" name="nip" id="nip" placeholder="Nama NIP" >              
-              <div class="help-block"></div>
-            </div>
-               
-          </div>       
-
-         
-           <div class="col-xs-12 col-sm-5">
-            <div class="form-group required">
-              <label for="username" class="control-label"><b>Username <font color="red">*</font></b></label>
-              <input type="text" class="form-control nip" name="username" id="usernamepegawai" placeholder="Username" value="<?php echo $this->input->post('username', TRUE); ?>">
-              <div class="help-block"></div>
-            </div>
-          </div>        
-          
-        </div>
-
-        <div class="row">
-          <?php echo form_hidden('tokenId', ''); ?>
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group required">
-              <label for="fullname" class="control-label" style="font-size:15px;"><b>Nama Lengkap <font color="red">*</font></b></label>
-              <input type="text" class="form-control fullname" name="fullname" id="fullnamepegawai" placeholder="Nama Lengkap" value="<?php echo $this->input->post('fullname', TRUE); ?>" readonly>
-              <div class="help-block"></div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group required">
-              <label for="email" class="control-label"><b>Alamat Email</b></label>
-              <input type="text" class="form-control email" name="email" id="emailpegawai" placeholder="Alamat Email" value="<?php echo $this->input->post('email', TRUE); ?>">
-              <div class="help-block"></div>
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group required">
-              <label for="jabatan" class="control-label"><b>Jabatan</b></label>
-              <input type="text" class="form-control jabatan" name="jabatan" id="jabatan" placeholder="Jabatan" value="<?php echo $this->input->post('jabatan', TRUE); ?>">
-              <div class="help-block"></div>
-            </div>
-          </div>
-         
-        </div>
-
-
-        
-
-        <div class="row">
-          <label for="groupid" class="control-label col-xs-12" style="margin-bottom:0px;"><b>Group User <font color="red">*</font></b></label>
-          <div class="col-xs-12 col-sm-12" style="margin-left:-10px;margin-bottom:20px;">
-            <div class="form-group required">
-              <?php foreach ($data_group as $key => $dg) {
-                echo '<div class="col-xs-12 col-sm-2">';
-                  echo '<label class="checkbox-inline">';
-                    echo '<input type="checkbox" name="groupid[]" id="groupid_'.$dg['id_group'].'" value="'.$dg['id_group'].'"><b>'.$dg['nama_group'].'</b>';
-                  echo '</label>';
-                echo '</div>';
-              } ?>
-              <div class="help-block col-xs-12 col-sm-12"></div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group required">
-              <label for="password" class="control-label"><b>Password <font color="red" class="lblPass">*</font></b></label>
-              <div class="input-group">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password Minimal 8 Karakter" value="<?php echo $this->input->post('password', TRUE); ?>">
-                <div class="input-group-addon showPass"><i class="fa fa-eye"></i></div>
-              </div>
-              <div class="help-block"></div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group required">
-              <label for="conf_password" class="control-label"><b>Konfirmasi Password <font color="red" class="lblPass">*</font></b></label>
-              <div class="input-group">
-                <input type="password" class="form-control" name="conf_password" id="conf_password" placeholder="Konfirmasi Password" value="<?php echo $this->input->post('conf_password', TRUE); ?>">
-                <div class="input-group-addon showPass"><i class="fa fa-eye"></i></div>
-              </div>
-              <div class="help-block"></div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2">
-            <div class="form-group required">
-              <label for="blokir" class="control-label"><b>Blokir <font color="red">*</font></b></label>
-              <?php echo form_dropdown('blokir', blokir(), $this->input->post('blokir'), 'class="select-data" id="blokir"');?>
-              <div class="help-block"></div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2">
-            <div class="form-group required">
-              <label for="status" class="control-label"><b>Status <font color="red">*</font></b></label>
-              <?php echo form_dropdown('status', status(), $this->input->post('status'), 'class="select-data" id="status"');?>
-              <div class="help-block"></div>
-            </div>
-          </div>
-        </div> 
-      </div>
-      <div class="modal-footer" style="margin-top:0px;padding:10px 15px 15px 0px;">
-        <button type="button" class="btn btn-default" class="close" data-dismiss="modal" aria-hidden="true" style="padding:12px 16px;"><i class="fa fa-times"></i> CANCEL</button>
-        <button type="submit" class="btn btn-primary" name="savePegawai" id="savePegawai" style="padding:12px 16px;"><i class="fa fa-check"></i> SUBMIT</button>
-      </div>
-      <?php echo form_close(); ?>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalPilihPegawai" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Data Pegawai</h4>
-      </div>
-      <div class="modal-body">        
-           <div id="pegawai_table"> </div>        
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 <script type="text/javascript">
   $.fn.modal.Constructor.prototype.enforceFocus = function() {};
   var csrfName  = '<?php echo $this->security->get_csrf_token_name(); ?>';
   var site      = '<?php echo site_url();?>';
-  var opdID = '', subOpdID = '';
+  var opdID = '', jabatanID = '';
 
   function run_waitMe(el) {
     el.waitMe({
@@ -425,8 +264,7 @@
   }
 
   $(document).ready(function(e){
-    getDataListUser();
-    getPegawai();
+    getDataListUser();   
     
   });
 
@@ -561,17 +399,18 @@
           $('#username').val(dataUser.message.username);
           $('#email').val(dataUser.message.email);
           $('#id_opd').select2('val', dataUser.message.id_opd).trigger('change');
-          $('#jenis_user').select2('val', dataUser.message.jenis_user).trigger('change');
-          
+          jabatanID = dataUser.message.id_jabatan;          
 
           $('#blokir').select2('val', dataUser.message.blokir);
           $('#status').select2('val', dataUser.message.status);
           $.each(dataUser.message.groupid, function(key, g){
             $('input[type="checkbox"][value="'+g+'"]#groupid_'+g).prop('checked', true);
           });
+          console.log(jabatanID);
         }
         $('#frmEntry').waitMe('hide');
       }
+
     });
 }
 
@@ -870,8 +709,33 @@ function calculatePasswordScore(password, options) {
 
   $(document).on('change', 'select[name="id_opd"]', function(e) {
     let id = $(this).val();
-    getSubOpd(id);
+    getJabatan(id);
   });
+
+  function getJabatan(opdId) {
+    jabatanID = (jabatanID != '') ? jabatanID : '<?php echo $this->input->post('id_jabatan', TRUE); ?>';
+    let lblJabatan = '';
+    $.ajax({
+      type: 'GET',
+      url: site + 'manajemen/users/jabatan',
+      data: {'opdId' : opdId},
+      dataType: 'json',
+      success: function(data) {
+        $('input[name="'+csrfName+'"]').val(data.csrfHash);
+        $('select[name="id_jabatan"]').html('').select2('data', null);
+        if(data.status == 1) {
+          lblJabatan = '<option value="">Pilih Jabatan</option>';
+          $.each(data.message,function(key,value){
+            lblJabatan += '<option value="'+value['id']+'">'+value['text']+'</option>';
+          });
+        } else
+        lblJabatan = '<option value="">Pilih Jabatan</option>';
+        $('select[name="id_jabatan"]').html(lblJabatan);
+        $('select[name="id_jabatan"]').select2('val', jabatanID).trigger('change');
+        
+      }
+    });
+  }
 
   function getRegency(provinceId) {
     subOpdID = (subOpdID != '') ? subOpdID : '<?php echo $this->input->post('sub_opd', TRUE); ?>';

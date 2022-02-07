@@ -479,6 +479,28 @@ if (!function_exists('array_group_by')) {
     }
     return $bg;
   }
+
+  if (!function_exists('convert_level_akses')) {
+    function convert_level_akses($id) {
+      $ci =& get_instance();
+      $ci->load->database();
+      $ci->db->where('id_level_akses', $id);
+      $row = $ci->db->get('xi_sa_level_akses')->row_array();
+      $level = $row['level_akses'];
+      return $level;
+    }
+  }
+
+  if (!function_exists('convert_jabatan')) {
+    function convert_jabatan($id) {
+      $ci =& get_instance();
+      $ci->load->database();
+      $ci->db->where('id_jabatan', $id);
+      $row = $ci->db->get('xi_sa_jabatan')->row_array();
+      $jab = $row['nm_jabatan'];
+      return $jab;
+    }
+  }
 }
 
 /* End of file string_helper.php */

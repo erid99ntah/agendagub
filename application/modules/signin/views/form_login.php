@@ -16,37 +16,32 @@
   <link rel="stylesheet" href="<?php echo base_url('assets/fonts/font-awesome/css/font-awesome.min.css'); ?>" />
   <style type="text/css">
     .login-block{
-
       float:left;
       width:100%;
-      padding : 50px 50px 50px 50px;
-      margin: auto;
+      padding : 10px 10px 10px 10px;      
+      margin-top: 7%;
     }
     body {
-      background: #007bff;
-      background: linear-gradient(to right, #6c757d, #343a40);
+      background: #C6C6D3;
     }
-    .banner-sec{background-size:cover; min-height:500px; border-radius: 0 10px 10px 0; padding:0;}
+    .banner-sec{background:url(<?php echo site_url('images/1.jpg');?>)  no-repeat left bottom; background-size:cover; min-height:500px; border-radius: 0px; padding:0;}
     .carousel-inner{border-radius:0 10px 10px 0;}
     .carousel-caption{text-align:left; left:5%;}
     .login-sec{padding: 50px 30px; position:relative;}
     .login-sec .copy-text{position:absolute; width:80%; bottom:20px; font-size:13px; text-align:center;}
     .login-sec .copy-text i{color:#FEB58A;}
     .login-sec .copy-text a{color:#E36262;}
-    .login-sec h2{margin-bottom:30px; font-weight:800; font-size:30px; color: #007bff;}
-    .login-sec h2:after{content:" "; width:100px; height:5px; background:#4DB1F4; display:block; margin-top:20px; border-radius:3px; margin-left:auto;margin-right:auto}
-    
+    .login-sec h2{font-weight:800; font-size:30px; color: #6f42c1;}  
+    .bg-indigo{background-color: #6f42c1;color:#fff;}
   </style>
 </head>
 
 <body>
-  <div class="container">
-
     <section class="login-block">
-      <div class="container" style="background:#fff; border-radius: 10px; padding:10px 10px 10px 10px;">
+      <div class="container py-5 px-5" style="background:#fff; border-radius:0px;">
         <div class="row">
         <div class="col-md-6 login-sec">
-            <h2 class="text-center"> Agenda</h2>
+            <h2 class="text-center"> Agenda Pimpinan</h2>
             <p><?php echo $this->session->flashdata('message'); ?></p>
             <?php echo form_open(site_url('signin/login'), array('class' => 'form-horizontal', 'role' => 'form')); ?>
               <div class="form-label-group">
@@ -69,14 +64,16 @@
               <button type="submit" name="submit" id="submit" class="btn btn-success" value="Login"><i class="fa fa-unlock"></i> Login</button> 
               <button type="reset" name="reset" id="reset" class="btn btn-danger" value="Login"><i class="fa fa-refresh"></i> Batal</button> 
              <?php echo form_close(); ?>
-
+            <a href="<?php echo site_url('upload/app-release.apk');?>" class="btn btn-block mt-5 bg-indigo"> Download APK</a>
             <div class="copy-text"><?php echo "Agenda ©" . ((date('Y') == "2020") ? "2020" : "2020 - ".date('Y')) . " " . " - Team IT Kominfo Prov. Sumbar"; ?></div>
           </div>
           <div class="col-md-6 banner-sec d-none d-md-block">
-            <img src="<?php echo base_url('images/agenda1.png');?>" class="img-fluid" alt="Responsive image" style="width:90%;">
+              <div class="banner-text">
+                
+              </div>
           </div>
       </div>
-    </section>
+    
     <!-- <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card card-signin my-5">

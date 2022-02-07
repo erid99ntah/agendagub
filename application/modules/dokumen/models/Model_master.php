@@ -310,6 +310,17 @@ class Model_master extends CI_Model
 
       return $query->row_array();
     }
+
+    public function getUserProfileByUsername($username)
+    {
+        $this->db->select('token, fullname');
+        $this->db->from('xi_sa_users');
+        $this->db->where('username', $username);
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->row_array();
+    }
 }
 
 // This is the end of auth signin model

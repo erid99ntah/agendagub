@@ -12,7 +12,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="col-md-8">
+        <div class="col-md-6">
           <div class="panel panel-primary">
             <div class="panel-heading">
     		      <h4>Detail Agenda</h4>
@@ -78,87 +78,39 @@
                     ?>
                   </td>
                 </tr>
+                <tr>
+                    <td> Penerima Disposisi</td>
+                    <td> <?php echo $detail['penerima_disposisi'];?> </td>
+                </tr>
+
+                <tr>
+                    <td> Keterangan Hadir</td>
+                    <td> <?php echo $detail['keterangan_hadir'];?> </td>
+                </tr>
               </thead>
             </table>
           </div>
         </div>
-        <div class="col-md-4" <?php echo $showDoc;?> >
+        <div class="col-md-6" <?php echo $showDoc;?> >
             <div class="panel panel-primary">
                 <div class="panel-heading">
                   <h4>Dokumen</h4>
                 </div>
 
                 <?php
-                   echo '<embed  style="width:100%;height:300px;" src="http://docs.google.com/gview?url='.$url.'&embedded=true" type="text/html" >'
+                  echo ' <object data="'.$url.'" type="application/pdf" style="width:100%;height:500px;"></object>';
                 ?>
             </div>
 
         </div>
     </div>
   </div>
-      <?php 
-      if ($this->app_loader->is_admin() ||  $this->app_loader->is_pimpinan() || $this->app_loader->is_ajudan() ) 
-      {
-
-        if ($detail['id_status']=='SM' ) 
-        {
-          
-        ?>
-          <div class="panel panel-green">
-            <div class="panel-heading">Status Agenda</div>  
-            <div class="panel-body">
-                 <?php echo form_open(site_url('dokumen/draft/validasi'), array('class' => 'form-horizontal row-border', 'role' => 'form')); ?>
-                  <div class="panel-body">
-                  <input type="hidden" name="token" value="<?php echo $detail['token'];?>" >
-                    <div class="form-group">
-                      <label for="id_status" class="col-sm-3 control-label"><b> Status Agenda</b></label>
-                      <div class="col-sm-6">
-                        <?php echo form_dropdown('id_status', array('' =>'Pilih Status Agenda', 'SH'=>'Dihadiri', 'SW'=>'Diwakilkan'), $this->input->post('id_status'), 'class="select-all"', 'id="id_status"');?>
-                      </div>
-                    </div>
-                    
-
-                    <div class="form-group" id="disposisi" >
-                      <label for="id_status" class="col-sm-3 control-label"><b> Penerima Disposisi</b></label>
-                      <div class="col-sm-6">
-                        <select name="penerima_disposisi" id="penerima_disposisi" class="select-all">
-                            <option value="" selected>---Pilih Penerima Disposisi---</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="keterangan" class="col-sm-3 control-label"><b id="ket">Keterangan</b></label>
-                      <div class="col-sm-6">
-                        <textarea class="form-control" name="keterangan" id="keterangan" rows="3" placeholder="Keterangan"><?php echo set_value('keterangan'); ?></textarea>
-                      </div>
-                    </div>
-                    
-                  </div>
-                  <div class="panel-footer">
-                    <div class="row">
-                      <div class="col-sm-6 col-sm-offset-3">
-                        <div class="btn-toolbar">
-                          <input class="btn-primary btn" type="submit" name="save" id="save" value="Simpan Data">
-                          <a href="javascript:history.back()" class="btn-default btn">Batal</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <?php echo form_close(); ?>
-            </div>
-          </div>
-
-        <?php
-        }
-      }
-      ?>
-
+     
 
        <?php
       if ($detail['id_status']=='SW') 
       {
-        $disposisi = $this->mmas->getDisposisiByAgenda($detail['id_agenda']);
+        /*$disposisi = $this->mmas->getDisposisiByAgenda($detail['id_agenda']);
 
         echo '<div class="panel panel-primary">
                 <div class="panel-heading">Disposisi</div>';  
@@ -193,7 +145,7 @@
                         }
                   echo '</tbody>';
                   echo '</table>';
-        echo '</div>'  ;
+        echo '</div>'  ;*/
       }
     ?>
 

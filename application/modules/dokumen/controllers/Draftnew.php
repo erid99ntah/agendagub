@@ -6,12 +6,12 @@
  * @author Diskominfo Sumbar
  */
 
-class Draft extends SLP_Controller {
+class Draftnew extends SLP_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('model_draft' => 'mdraft', 'model_master' => 'mmas'));
+		$this->load->model(array('model_draftnew' => 'mdraft', 'model_master' => 'mmas'));
 		$this->mdraft->setFolder();
 	}
 
@@ -23,7 +23,8 @@ class Draft extends SLP_Controller {
 		
 		$this->session_info['page_name'] = "Data Draft Agenda";
 		$this->session_info['data_penerima'] = $this->mdraft->getDataPenerimaNew();
-		$this->template->build('form_draft/list_draft', $this->session_info);
+		$this->session_info['status_agenda'] = $this->mdraft->getDaftarStatusAgenda();
+		$this->template->build('form_draftnew/list_draft', $this->session_info);
 	}
 
 	public function listview()
@@ -61,20 +62,20 @@ class Draft extends SLP_Controller {
 					$no++;
 					$row = array();
 					$row[] = $no;
-					$row[] = '<a data-toggle="tooltip" data-placement="left" title="Detail Draft Agenda" href="'.site_url('dokumen/draft/review/'.$dl['token']).'/'.create_url($dl['nama_agenda']).'" 
+					$row[] = '<a data-toggle="tooltip" data-placement="left" title="Detail Draft Agenda" href="'.site_url('dokumen/draftnew/review/'.$dl['token']).'/'.create_url($dl['nama_agenda']).'" 
 							  class="tooltips"><i class="fa fa-edit"></i> '.$dl['nama_agenda'].'</a>';
 					$row[] = convert_agenda($dl['jenis_agenda']);
 					$row[] = tgl_indo($dl['tanggal']);
 					$row[] = ' '.$dl['jam_mulai'].' s.d '.$dl['jam_selesai'].' ';
 					$row[] = $dl['kegiatan'];
-					$row[] = $dl['lokasi_kegiatan'];					
+					$row[] = $dl['lokasi_kegiatan'];
 					$row[] = $dl['penyelenggara'];
 					$row[] = $status_agenda;
 					$row[] = $this->mmas->getUserProfileByUsername($dl['create_by'])['fullname'];
 					
 					//$row[] = $status;
 					$row[] = '
-				<a data-toggle="tooltip" data-placement="left" title="Detail Draft Agenda" href="'.site_url('dokumen/draft/review/'.$dl['token']).'/'.create_url($dl['nama_agenda']).'" 
+				<a data-toggle="tooltip" data-placement="left" title="Detail Draft Agenda" href="'.site_url('dokumen/draftnew/review/'.$dl['token']).'/'.create_url($dl['nama_agenda']).'" 
 							  class="tooltips btn btn-xs btn-primary"><i class="fa fa-check"></i> Review</a>
 					<button type="button" class="btn btn-xs btn-orange btnEdit" data-id="'.$dl['token'].'" title="Edit Agenda"><i class="fa fa-pencil"></i> </button>
 					<button type="button" class="btn btn-xs btn-danger btnDelete" data-id="'.$dl['token'].'" title="Delete Agenda"><i class="fa fa-trash-o"></i> </button>';
@@ -123,15 +124,14 @@ class Draft extends SLP_Controller {
 	{
 		$this->breadcrumb->add('Dashboard', site_url('home'));
 		$this->breadcrumb->add('Dokumen', '#');
-		$this->breadcrumb->add('Data Draft Agenda', site_url('dokumen/draft'));
+		$this->breadcrumb->add('Data Draft Agenda', site_url('dokumen/draftnew'));
 		$this->breadcrumb->add('Detail Draft Agenda', '#');
 		$this->session_info['page_name'] = "Detail Draft Agenda";
 
 		$token = $this->uri->segment(4,0);
 		$detail_agenda = $this->mdraft->getDetailDraft($token);				
 		$this->session_info['detail']  = $this->mdraft->getDetailDraft($token);
-		
-		$this->template->build('form_draft/detail_draft', $this->session_info);
+		$this->template->build('form_draftnew/detail_draft', $this->session_info);		
 	}
 
 
@@ -144,12 +144,12 @@ class Draft extends SLP_Controller {
 		if($this->mdraft->validasiDataAgendaPimpinan("add") == FALSE) 
 		{
 			error_message('danger', 'Peringatan!', 'Tolong dilengkapi form inputan dibawah...'.validation_errors().' ');
-     		 redirect('dokumen/draft/review/'.$token.'/'.$url);
+     		 redirect('dokumen/draftnew/review/'.$token.'/'.$url);
     	} else {
 			$data = $this->mdraft->insertDataReview();
 			if($data) {
 				error_message('success', 'Sukses!', 'Data berhasil disimpan.');
-				redirect('dokumen/draft');
+				redirect('dokumen/draftnew');
 			}
 		}
 	}
@@ -163,12 +163,12 @@ class Draft extends SLP_Controller {
 		if($this->mdraft->validasiDataAgendaSekretaris("add") == FALSE) 
 		{
 			error_message('danger', 'Peringatan!', 'Tolong dilengkapi form inputan dibawah...'.validation_errors().' ');
-     		 redirect('dokumen/draft/review/'.$token.'/'.$url);
+     		 redirect('dokumen/draftnew/review/'.$token.'/'.$url);
     	} else {
 			$data = $this->mdraft->insertDataAcc();
 			if($data) {
 				error_message('success', 'Sukses!', 'Data berhasil disimpan.');
-				redirect('dokumen/draft');
+				redirect('dokumen/draftnew');
 			}
 		}
 	}
@@ -184,24 +184,27 @@ class Draft extends SLP_Controller {
 			if(!empty($token) AND !empty($session)) {
 				$data = $this->mdraft->getDetailDraft($token);
 				$row = array();
-				$row['token'] 		= !empty($data) ? $data['token'] : '';
-				$row['nama_agenda']	= !empty($data) ? $data['nama_agenda'] : '';
-				$row['jenis_agenda']= !empty($data) ? $data['jenis_agenda'] : '';
-				$row['tanggal']		= !empty($data) ? $data['tanggal'] : '';
-				$row['penerima']	= !empty($data) ? $data['penerima'] : '';
-				$row['jam_mulai']	= !empty($data) ? $data['jam_mulai'] : '';
-				$row['jam_selesai']	= !empty($data) ? $data['jam_selesai'] : '';
+				$row['token'] 			= !empty($data) ? $data['token'] : '';
+				$row['nama_agenda']		= !empty($data) ? $data['nama_agenda'] : '';
+				$row['jenis_agenda']	= !empty($data) ? $data['jenis_agenda'] : '';
+				$row['tanggal']			= !empty($data) ? $data['tanggal'] : '';
+				$row['penerima']		= !empty($data) ? $data['penerima'] : '';
+				$row['jam_mulai']		= !empty($data) ? $data['jam_mulai'] : '';
+				$row['jam_selesai']		= !empty($data) ? $data['jam_selesai'] : '';
 				$row['kegiatan']		= !empty($data) ? $data['kegiatan'] : '';
 				$row['lokasi_kegiatan']	= !empty($data) ? $data['lokasi_kegiatan'] : '';
 				$row['penyelenggara']	= !empty($data) ? $data['penyelenggara'] : '';
-				$row['cp']	= !empty($data) ? $data['cp'] : '';
-				$row['keterangan']		= !empty($data) ? $data['keterangan'] : '';
-				$row['dokumen'] 		= !empty($data) ? $data['dokumen'] : '';	
+				$row['penerima_disposisi']	= !empty($data) ? $data['penerima_disposisi'] : '';
+				$row['keterangan_hadir']	= !empty($data) ? $data['keterangan_hadir'] : '';
+				$row['id_status']			= !empty($data) ? $data['id_status'] : '';
+				$row['cp']					= !empty($data) ? $data['cp'] : '';
+				$row['keterangan']			= !empty($data) ? $data['keterangan'] : '';
+				$row['dokumen'] 			= !empty($data) ? $data['dokumen'] : '';	
 				
 				$tahun = substr($data['create_date'],0,4);
           		$bulan = substr($data['create_date'],5,2); 
 
-				$fileUpload ='<a href="'.site_url('dokumen/draft/download_file/'.$token).'">
+				$fileUpload ='<a href="'.site_url('dokumen/draftnew/download_file/'.$token).'">
 								'.$row['dokumen'].'
 							  </a>
 							  <span class="help-block"><i>* File Yang Telah Diupload </i></span>';		

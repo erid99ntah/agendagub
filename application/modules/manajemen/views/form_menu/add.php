@@ -140,7 +140,7 @@
   $(document).on('click', '.pilih-module', function (e) {
     document.getElementById("id_rules").value = $(this).attr('data-id');
     document.getElementById("nama_rules").value = $(this).attr('data-nm');
-    document.getElementById("order_menu").value = $(this).attr('data-nm');
+    document.getElementById("url_menu").value = $(this).attr('data-nm');
     $('#myModal').modal('hide');
   });
 </script>

@@ -29,10 +29,10 @@ class Model_agenda extends CI_Model
             $stats =array('SH', 'SW');
                 $this->db->select('a.id_agenda, a.token,a.jenis_agenda, a.nama_agenda,a.status_disposisi, a.tanggal,
                    a.penerima,a.id_status, a.status_verifikasi, a.jam_mulai, a.jam_selesai, 
-                   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.create_date,
-                   a.penyelenggara, a.cp, b.nm_status');
+                   a.kegiatan, a.lokasi_kegiatan, a.dokumen, a.keterangan, a.penerima_disposisi, a.keterangan_hadir, a.create_date,
+                   a.penyelenggara, a.cp, a.create_by, b.nm_status');
                 $this->db->from('data_agenda a');
-                $this->db->join('master_status b',    'b.id_status = a.status_verifikasi', 'INNER');                
+                $this->db->join('master_status b',    'b.id_status = a.id_status', 'INNER');                
                 $this->db->where('a.jenis_agenda',  $jenis_agenda);
                 $this->db->where_in('a.id_status', $stats);
 
@@ -57,7 +57,7 @@ class Model_agenda extends CI_Model
 
                 $this->db->select('id_agenda,token,jenis_agenda,nama_agenda,status_disposisi, tanggal,
                  penerima,id_status,status_verifikasi, jam_mulai, jam_selesai, 
-                 kegiatan, lokasi_kegiatan, dokumen, keterangan,create_date, penyelenggara, cp');
+                 kegiatan, lokasi_kegiatan, dokumen, keterangan,create_date, penyelenggara, cp, penerima_disposisi, keterangan_hadir, create_by');
                 $this->db->from('data_agenda');                
                 $this->db->where('token', $token);
                 $this->db->where_in('id_status', $status_agenda);

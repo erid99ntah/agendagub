@@ -55,23 +55,27 @@ class Draft extends RestController {
                }              
 
 
-               $i=array('token'             =>$dd['token'],
-                        'nama_agenda'       =>$dd['nama_agenda'],
-                        'jenis_agenda'      =>$dd['jenis_agenda'],
-                        'tanggal'           =>$dd['tanggal'],
-                        'jam_mulai'         =>$dd['jam_mulai'],
-                        'jam_selesai'       =>$dd['jam_selesai'],
-                        'kegiatan'          =>$dd['kegiatan'],
-                        'lokasi_kegiatan'   =>$dd['lokasi_kegiatan'],
-                        'penyelenggara'     =>$dd['penyelenggara'],
-                        'cp'                =>$dd['cp'],
-                        'status_verifikasi' =>$dd['status_verifikasi'],
-                        'nm_status_verifikasi'         =>$status_verifikasi,
-                        'id_status'         =>$dd['id_status'],
-                        'status_agenda'         =>$cekStatusAgenda,
-                        'dokumen'           =>$url,
-                        'keterangan'           =>$dd['keterangan']
-                        );
+                   $i=array('token'             =>$dd['token'],
+                    'nama_agenda'       =>$dd['nama_agenda'],
+                    'jenis_agenda'      =>$dd['jenis_agenda'],
+                    'tanggal'           =>$dd['tanggal'],
+                    'jam_mulai'         =>$dd['jam_mulai'],
+                    'jam_selesai'       =>$dd['jam_selesai'],
+                    'kegiatan'          =>$dd['kegiatan'],
+                    'lokasi_kegiatan'   =>$dd['lokasi_kegiatan'],
+                    'penyelenggara'     =>$dd['penyelenggara'],
+                    'cp'                =>$dd['cp'],
+                    'status_verifikasi' =>$dd['status_verifikasi'],
+                    'nm_status_verifikasi'         =>$status_verifikasi,
+                    'id_status'         =>$dd['id_status'],
+                    'status_agenda'     =>$cekStatusAgenda,
+                    'dokumen'           =>$url,
+                    'keterangan'        =>$dd['keterangan'],
+                    'penerima_disposisi'=>$dd['penerima_disposisi'],
+                    'keterangan_hadir'  =>$dd['keterangan_hadir'],
+                    'create_by'         =>$dd['create_by'],
+                    'create_user'       =>$this->mmas->getUsersProfileByUsername($dd['create_by'])['fullname']
+                    );
                array_push($list, $i);
             }
 
@@ -133,9 +137,13 @@ class Draft extends RestController {
                         'status_verifikasi' =>$detail['status_verifikasi'],
                         'nm_status_verifikasi' =>$status_verifikasi,
                         'id_status'         =>$detail['id_status'],
-                        'status_agenda'         =>$cekStatusAgenda,
+                        'status_agenda'     =>$cekStatusAgenda,
                         'dokumen'           =>$url,
-                        'keterangan'           =>$detail['keterangan']
+                        'keterangan'        =>$detail['keterangan'],
+                        'penerima_disposisi'=>$detail['penerima_disposisi'],
+                        'keterangan_hadir'  =>$detail['keterangan_hadir'],
+                        'create_by'         =>$detail['create_by'],
+                        'create_user'       =>$this->mmas->getUsersProfileByUsername($detail['create_by'])['fullname']
                         );
 
             $this->response( [

@@ -257,7 +257,7 @@ class Signin extends MY_Controller {
 			'img_url' 		=> site_url('captcha/'),
 			'font_path'   => './assets/fonts/captcha/Chunk.ttf',
 			'img_width' 	=> 200,
-			'img_height' 	=> 50,
+			'img_height' 	=> 80,
 			'expiration' 	=> 120,
 			'word_length' => 5,
 			'font_size'   => 30,
@@ -276,12 +276,12 @@ class Signin extends MY_Controller {
 		$this->mas->setCaptcha($cap);
 
 		$html = '<div class="form-group">
-		<div class="col-sm-12">
-			<p>'.$cap['image'].'</p>
-			<input type="text" class="form-control" name="captcha" placeholder="Masukan Kode">
-			'.form_error('captcha').'
-		</div>
-	</div>';
+					<div class="col-sm-12 ml-0 px-0">
+						<p>'.$cap['image'].'</p>
+						<input type="text" class="form-control" name="captcha" placeholder="Masukan Kode">
+						'.form_error('captcha').'
+					</div>
+				</div>';
 
 	return $html;
 }

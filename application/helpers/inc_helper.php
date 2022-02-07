@@ -207,39 +207,6 @@ if (!function_exists('convert_jenis_fungsi')) {
   }
 }
 
-/**
- * Fungsi convert level akses
- */
-if (!function_exists('convert_level_akses')) {
-  function convert_level_akses($id_level_akses) {
-    switch ($id_level_akses) {
-      case '1': $level = "SUPER ADMIN";
-        break;
-      case '2': $level = "Administrator";
-        break;
-      case '3': $level = "Pimpinan";
-        break;
-      case '4': $level = "Sekretaris";
-        break;
-      case '5': $level = "Pejabat";
-        break;
-      case '6': $level = "Staf";
-        break;
-      case '7': $level = "Tata Usaha";
-        break;
-      case '8': $level = "Ajudan DPRD";
-        break;
-      case '9': $level = "Wakil DPRD";
-        break;
-      case '10': $level = "Anggota DPRD";
-        break;
-      default: $level = "";
-        break;
-    }
-    return $level;
-  }
-}
-
 if (!function_exists('perkawinan')) {
   function perkawinan() {
     $arr = array(

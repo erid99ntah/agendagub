@@ -11,7 +11,7 @@
 
       <div class="row">
         <div class="col-md-12">
-            <div class="col-md-8" style="padding:0;margin:0;">
+            <div class="col-md-6" style="padding:0;margin:0;">
                 <div class="panel panel-primary">
                   <div class="panel-heading">
           		      <h4>Detail Agenda</h4>
@@ -23,9 +23,9 @@
                         <td><?php echo $detail['nama_agenda'];?></td>
                       </tr>
                       <tr>
-                        <td>Jenis Agenda</td>
-                        <td><?php echo convert_agenda($detail['jenis_agenda']);?></td>
-                      </tr>
+                        <td>Status Agenda</td>
+                        <td><label class="label label-primary"> <?php echo $detail['nm_status'];?> </label> </td>
+                    </tr>
                       <tr>
                         <td>Status Agenda</td>
                         <td><?php echo $detail['nm_status'];?></td>
@@ -78,18 +78,33 @@
                             </td>
                           </tr>
 
+                          <tr>
+                              <td>Status Agenda</td>
+                              <td><label class="label label-primary"> <?php echo $detail['nm_status'];?> </label> </td>
+                          </tr>
+
+                          <tr>
+                              <td> Penerima Disposisi</td>
+                              <td> <?php echo $detail['penerima_disposisi'];?> </td>
+                          </tr>
+
+                          <tr>
+                              <td> Keterangan Hadir</td>
+                              <td> <?php echo $detail['keterangan_hadir'];?> </td>
+                          </tr>
+
                     </thead>
                   </table>
                 </div>
           </div>
-          <div class="col-md-4" <?php echo $drv;?>>
+          <div class="col-md-6" <?php echo $drv;?>>
               <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h4>Dokumen</h4>
                     </div>
 
                     <?php
-                       echo '<embed  style="width:100%;height:300px;" src="http://docs.google.com/gview?url='.$url.'&embedded=true" type="text/html" >'
+                        echo ' <object data="'.$url.'" type="application/pdf" style="width:100%;height:500px;"></object>';
                     ?>
                 </div>
           </div>
@@ -98,7 +113,7 @@
     <?php
       if ($detail['id_status']=='SW') 
       {
-        $disposisi = $this->mag->getDisposisiByAgenda($detail['id_agenda']);
+        /*$disposisi = $this->mag->getDisposisiByAgenda($detail['id_agenda']);
 
         echo '<div class="panel panel-primary">
                 <div class="panel-heading">Disposisi</div>';  
@@ -129,7 +144,7 @@
                         }
                   echo '</tbody>';
                   echo '</table>';
-        echo '</div>'  ;
+        echo '</div>'  ;*/
       }
     ?>
       

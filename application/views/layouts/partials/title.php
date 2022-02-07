@@ -28,9 +28,7 @@
               echo '<li class="divider"></li>';
             }
             ?>
-  					<li><a href="#">Edit Profile <i class="pull-right fa fa-pencil"></i></a></li>
-  					<li><a href="#">Account <i class="pull-right fa fa-cog"></i></a></li>
-  					<li><a href="#">Help <i class="pull-right fa fa-question-circle"></i></a></li>
+  					<li><a href="<?php echo site_url('home/sandi');?>"> Ganti Sandi <i class="pull-right fa fa-pencil"></i></a></li>
   					<li class="divider"></li>
   					<li><a href="<?php echo site_url('signin/logout') ?>" class="text-right">Sign Out</a></li>
   				</ul>

@@ -112,39 +112,26 @@
         <button type="button" class="close btnClose" aria-hidden="true">&times;</button>
         <h4 class="modal-title"><b>FORM ENTRI DATA AGENDA</b></h4>
       </div>
-      <?php echo form_open_multipart(site_url('dokumen/draft/create'), array('id' => 'formEntry')); ?>
+      <?php echo form_open_multipart(site_url('dokumen/draftnew/create'), array('id' => 'formEntry')); ?>
       <div class="modal-body" style="padding:15px 15px 5px 15px;">
         <div id="errEntry"></div>
         <?php echo form_hidden('tokenId', ''); ?>
         <div class="row"> 
-          <div class="col-xs-12">
+          <div class="col-xs-12 col-sm-7">
             <div class="form-group required">
               <label for="nama_agenda" class="control-label" style="font-size:15px;"><b>Nama Agenda <font color="red">*</font></b></label>
               <input type="text" class="form-control" name="nama_agenda" id="nama_agenda" placeholder="Nama Agenda" value="<?php echo $this->input->post('nm_agenda', TRUE); ?>">
               <div class="help-block"></div>
             </div>
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-6">
-            <div class="form-group required">
-              <label for="jenis_agenda" class="control-label" style="font-size:15px;"><b> Jenis Agenda <font color="red">*</font></b></label>
-              <select name="jenis_agenda" class="form-control" id="jenis_agenda">
-                <option value="P" selected>
-                  Agenda Pimpinan
-                </option>
-              </select>
-              <div class="help-block"></div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-5">
             <div class="form-group required">
               <label for="penerima" class="control-label"><b>Penerima <font color="red">*</font></b></label>
               <?php echo form_dropdown('penerima', $data_penerima, $this->input->post('penerima', TRUE), 'class="select-all" id="penerima"'); ?>
               <div class="help-block"></div>
             </div>
           </div>
+
         </div>
 
         <div class="row">
@@ -226,6 +213,31 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group required">
+              <label for="dokumen" class="control-label"><b>Status Agenda</b></label>
+              <?php echo form_dropdown('id_status', $status_agenda, $this->input->post('id_status', TRUE), 'class="select-all" id="id_status"'); ?>
+              <div class="help-block"></div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group required">
+              <label for="penerima_disposisi" class="control-label"><b> Penerima </b></label>
+              <textarea class="form-control" name="penerima_disposisi" id="penerima_disposisi" placeholder="Penerima"></textarea>
+              <div class="help-block"></div>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group required">
+              <label for="keterangan_hadir" class="control-label"><b>Keterangan Hadir</b></label>
+              <textarea class="form-control" name="keterangan_hadir" id="keterangan_hadir" placeholder="Keterangan"></textarea>
+              <div class="help-block"></div>
+            </div>
+          </div>
+        </div>
         
       </div>
       <div class="modal-footer" style="margin-top:0px;padding:10px 15px 15px 0px;">
@@ -245,7 +257,7 @@
         <button type="button" class="close btnClose" aria-hidden="true">&times;</button>
         <h4 class="modal-title"><b id="tipe_validasi">FORM VALIDASI DATA AGENDA</b></h4>
       </div>
-      <?php echo form_open(site_url('dokumen/draft/approve'), array('id' => 'formEntryReview')); ?>
+      <?php echo form_open(site_url('dokumen/draftnew/approve'), array('id' => 'formEntryReview')); ?>
       <div class="modal-body" style="padding:15px 15px 5px 15px;">
         <div id="errEntryReview"></div>
         <?php echo form_hidden('tokenId', ''); ?>
@@ -345,7 +357,7 @@
       "serverSide": true,
       "ordering": false,
       "ajax": {
-        "url": site + "dokumen/draft/listview",
+        "url": site + "dokumen/draftnew/listview",
         "type": "POST",
         "data": {
           "param" : $('#formFilter').serializeArray(),
@@ -382,7 +394,7 @@
   });
 
   function formReset() {
-    $('#formEntry').attr('action', site + 'dokumen/draft/create');
+    $('#formEntry').attr('action', site + 'dokumen/draftnew/create');
     $('#errEntry').html('');
     $('.select-all').select2('val', '');
     $('#jenis_agenda').select2('val', '');
@@ -475,7 +487,7 @@
 
   $(document).on('click', '.btnEdit', function(e){
     formReset();
-    $('#formEntry').attr('action', site + 'dokumen/draft/update');
+    $('#formEntry').attr('action', site + 'dokumen/draftnew/update');
     var token = $(this).data('id');
 
     $('#modalEntryForm').modal({
@@ -488,7 +500,7 @@
     run_waitMe($('#frmEntry'));
     $.ajax({
       type: 'POST',
-      url: site + 'dokumen/draft/details',
+      url: site + 'dokumen/draftnew/details',
       data: {'token' : token, '<?php echo $this->security->get_csrf_token_name(); ?>' : $('input[name="'+csrfName+'"]').val()},
       dataType: 'json',
       success: function(data) {
@@ -497,9 +509,7 @@
           $('input[name="tokenId"]').val(token);
           $('#nama_agenda').val(data.message.nama_agenda);          
           $('#jenis_agenda').select2('val', data.message.jenis_agenda).trigger('change');          
-          $('#penerima').select2('val', data.message.penerima).trigger('change');          
-          //regeID = data.message.penerima;
-          //agendaID = data.message.jenis_agenda;
+          $('#penerima').select2('val', data.message.penerima).trigger('change');                   
           $('#tanggal').val(data.message.tanggal);
           $('#jam_mulai').val(data.message.jam_mulai);
           $('#jam_selesai').val(data.message.jam_selesai);
@@ -508,6 +518,9 @@
           $('#penyelenggara').val(data.message.penyelenggara);
           $('#cp').val(data.message.cp);
           $('#keterangan').val(data.message.keterangan);
+          $('#id_status').select2('val', data.message.id_status).trigger('change'); 
+          $('#penerima_disposisi').val(data.message.penerima_disposisi);
+          $('#keterangan_hadir').val(data.message.keterangan_hadir);
           $('#file_upload').html(data.file_upload);
         }
         $('#frmEntry').waitMe('hide');
@@ -545,7 +558,7 @@
           callback:function(response){
             if (response) {
               $.ajax({
-                url: site + 'dokumen/draft/delete',
+                url: site + 'dokumen/draftnew/delete',
                 type: "POST",
                 data: postData,
                 dataType: "json",
@@ -584,7 +597,7 @@
 
   $(document).on('click', '.btnReview', function(e){
     formResetReview();
-    $('#formEntryReview').attr('action', site + 'dokumen/draft/approve');
+    $('#formEntryReview').attr('action', site + 'dokumen/draftnew/approve');
     var token = $(this).data('id');
     var nama_agenda = $(this).data('nm');
      $('#tipe_validasi').html('FORM VALIDASI DATA AGENDA');
@@ -599,7 +612,7 @@
   });
 
   function formResetReview() {
-    $('#formEntryReview').attr('action', site + 'dokumen/draft/approve');
+    $('#formEntryReview').attr('action', site + 'dokumen/draftnew/approve');
     $('#errEntryReview').html('');    
     $('.help-block').text('');
     $('.required').removeClass('has-error');
@@ -688,7 +701,7 @@
 
   $(document).on('click', '.btnReject', function(e){
     formReset();
-    $('#formEntryReview').attr('action', site + 'dokumen/draft/reject');
+    $('#formEntryReview').attr('action', site + 'dokumen/draftnew/reject');
     var token = $(this).data('id');
     var nama_agenda = $(this).data('nm');
     $('#tipe_validasi').html('FORM TOLAK DATA AGENDA');
@@ -715,7 +728,7 @@
     let lblReg  ='';
     $.ajax({
       type: 'GET',
-      url: site + 'dokumen/draft/getPenerima',
+      url: site + 'dokumen/draftnew/getPenerima',
       data: {'jenis_agenda' : jenis_agenda},
       dataType: 'json',
       success: function(data) {
